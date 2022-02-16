@@ -1,4 +1,5 @@
 import * as React from 'react';
+import produce from 'immer';
 
 interface ToDoListDay {
     date: string
@@ -61,17 +62,9 @@ export class TestNested extends React.Component<TestNestedProps, TestNestedState
 
     testModify2 = () => {
         this.setState((state, props) => {
-            state.todoList.days[0].list[1] = 'modifed';
-            const state1 = {
-                todoList: {
-                    days: [
-                        {date: '2022-01-01', list: ['foo1']},
-                        ...state.todoList.days.slice(1),
-                    ],
-                    
-                }
-            }
-            return state1
+            return produce(state, draf => {
+                draf.todoList.days[0].list[1] = 'modifed';
+            });
         });
     };
 
@@ -85,11 +78,9 @@ export class TestNested extends React.Component<TestNestedProps, TestNestedState
 
     testAdd2 = () => {
         this.setState((state, props) => {
-            return {
-                todoList: {
-                    days: [...state.todoList.days, {date: '2022-01-04', list: ['foo4', 'bar4']}]
-                }
-            };
+            return produce(state, draft => {
+                draft.todoList.days.push({date: '2022-01-04', list: ['foo4', 'bar4']});
+            });
         });
     };
 
@@ -101,12 +92,10 @@ export class TestNested extends React.Component<TestNestedProps, TestNestedState
     };
 
     testDel2 = () => {
-        this.setState((state, props) => {
-            return {
-                todoList: {
-                    days: [...state.todoList.days.slice(1)]
-                }
-            }
+        this.setState((state, _) => {
+            return produce(state, draft => {
+                draft.todoList.days.pop();
+            });
         });
     }
 
