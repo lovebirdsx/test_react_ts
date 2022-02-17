@@ -3,6 +3,7 @@ import './App.css';
 import GraphEditor from './components/GraphEditor';
 import { Hello } from './components/Hello';
 import { TestContext } from './components/TestContext';
+import { TestImmer } from './components/TestImmer';
 import { TestNested } from './components/TestNested';
 
 export interface IPersonContext {
@@ -54,7 +55,8 @@ class App extends React.Component<any, AppState> {
             <Hello compiler='TypeScript' framework='React'/>
             <GraphEditor></GraphEditor> */}
             {/* <TestNested/> */}
-            <TestContext></TestContext>
+            {/* <TestContext></TestContext> */}
+            <TestImmer></TestImmer>
           </header>
         </PersonContext.Provider>
       </div>
