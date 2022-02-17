@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import GraphEditor from './components/GraphEditor';
 import { Hello } from './components/Hello';
+import { TestContext } from './components/TestContext';
 import { TestNested } from './components/TestNested';
 
 export interface IPersonContext {
@@ -52,7 +53,8 @@ class App extends React.Component<any, AppState> {
             <button onClick={() => this.setState({context: contextMap.bar})}>bar</button>
             <Hello compiler='TypeScript' framework='React'/>
             <GraphEditor></GraphEditor> */}
-            <TestNested/>
+            {/* <TestNested/> */}
+            <TestContext></TestContext>
           </header>
         </PersonContext.Provider>
       </div>
