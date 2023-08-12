@@ -1,5 +1,4 @@
 import React from 'react';
-import preset from '@rebass/preset'
 import { TestMain } from './components/test/Main';
 import { ThemeProvider } from '@emotion/react';
 
