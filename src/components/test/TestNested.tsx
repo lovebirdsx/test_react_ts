@@ -1,5 +1,6 @@
 import * as React from 'react';
-import produce from 'immer';
+import { produce } from 'immer';
+import { Box, Button, Flex, Heading, Label } from 'theme-ui';
 
 interface ToDoListDay {
   date: string
@@ -11,12 +12,12 @@ interface ToDoList {
 }
 
 function ToDoListDayView(props: ToDoListDay) {
-  const lists = props.list.map(e => <li><text>{e}</text></li>);
+  const lists = props.list.map(e => <Label><li>{e}</li></Label>);
   return (
-    <div>
-      <text>{props.date}</text>
+    <Box>
+      <Heading>{props.date}</Heading>
       {lists}
-    </div>
+    </Box>
   );
 }
 
@@ -102,23 +103,20 @@ export class TestNested extends React.Component<TestNestedProps, TestNestedState
   render() {
     return (
       <div>
-        <div>
-          <div>
-            <button onClick={this.testModify}>直接修改数据</button>
-          </div>
-          <div >
-            <button onClick={this.testModify2}>新建修改数据</button>
-          </div>
-        </div>
+        <Flex>
+          <Button m={10} onClick={this.testModify}>直接修改数据</Button>
+          <Button m={10} onClick={this.testModify2}>新建修改数据</Button>
+        </Flex>
 
-        <li>
-          <button onClick={this.testAdd}>直接添加数据</button>
-          <button onClick={this.testAdd2}>新建添加数据</button>
-        </li>
-        <li>
-          <button onClick={this.testDel}>直接删除数据</button>
-          <button onClick={this.testDel2}>新建删除数据</button>
-        </li>
+        <Flex>
+          <Button m={10} onClick={this.testAdd}>直接添加数据</Button>
+          <Button m={10} onClick={this.testAdd2}>新建添加数据</Button>
+        </Flex>
+
+        <Flex>
+          <Button m={10} onClick={this.testDel}>直接删除数据</Button>
+          <Button m={10} onClick={this.testDel2}>新建删除数据</Button>
+        </Flex>
         <ToDoListView days={this.state.todoList.days}></ToDoListView>
       </div>
     );

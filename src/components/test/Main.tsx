@@ -1,6 +1,5 @@
 import container from '../../inversify.config'
-import { Box, Flex, Heading } from 'rebass'
-import { Label, Radio } from '@rebass/forms'
+import { Box, Flex, Heading, Label, Radio } from 'theme-ui'
 import { ReactTestManager } from '../../common/test/ReactTestManager';
 import { GraphEditor } from './GraphEditor';
 import { TestContext } from './TestContext';
@@ -33,12 +32,12 @@ export function TestMain() {
 
   return (
     <Box>
-      <Heading fontSize={40}>React Test</Heading>
+      <Heading as={'h1'}>React Test</Heading>
       <Flex>
-        <Box p={10} width={200}>
+        <Box p={20}>
           {manager.tests.map((e, idx) => renderTestTitle({ name: e.name, select: idx === select, onClick: () => setSelect(idx) }))}
         </Box>
-        <Box p={10}>
+        <Box p={20}>
           {manager.tests[select].render()}
         </Box>
       </Flex>

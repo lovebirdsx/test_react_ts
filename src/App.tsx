@@ -1,13 +1,14 @@
 import React from 'react';
+import { ThemeUIProvider } from 'theme-ui';
+import { polaris } from '@theme-ui/presets'
 import { TestMain } from './components/test/Main';
-import { ThemeProvider } from '@emotion/react';
 
 class App extends React.Component {
   render(): React.ReactNode {
     return (
-      <ThemeProvider theme={{}}>
+      <ThemeUIProvider theme={polaris}>
         <TestMain />
-      </ThemeProvider>
+      </ThemeUIProvider>
     );
   }
 }

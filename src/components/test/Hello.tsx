@@ -1,4 +1,4 @@
-import { Heading } from "rebass";
+import { Heading } from "theme-ui";
 
 export function Hello() {
     return (

@@ -1,15 +1,16 @@
-import produce from 'immer';
+import { produce } from 'immer';
 import * as React from 'react';
+import { Button, Heading } from 'theme-ui';
 
 interface FooInfo {
     id: number
     name: string;
 }
 
-interface FooProps  {
+interface FooProps {
     foo: FooInfo
     onModify: (foo: FooInfo) => void
-    onMove: (isUp: boolean ) => void
+    onMove: (isUp: boolean) => void
 }
 
 function Foo(props: FooProps) {
@@ -23,27 +24,27 @@ function Foo(props: FooProps) {
     const moveUp = () => {
         props.onMove(true);
     };
-    
+
     const moveDown = () => {
         props.onMove(false);
     };
 
     return (
         <div>
-            <h2>{props.foo.name}</h2>
-            <button className='btn btn-block btn-lg btn-primary' onClick={changeName}>Change Name</button>
-            <button className='btn btn-block btn-lg btn-primary' onClick={moveUp}>move up</button>
-            <button className='btn btn-block btn-lg btn-primary' onClick={moveDown}>move down</button>
+            <Heading as='h1'>{props.foo.name}</Heading>
+            <Button m={10} onClick={changeName}>Change Name</Button>
+            <Button m={10} onClick={moveUp}>move up</Button>
+            <Button m={10} onClick={moveDown}>move down</Button>
         </div>
     );
 }
 
 export interface TestImmerProps {
-    
+
 }
 
 interface TestImmerState {
-    foos: FooInfo []
+    foos: FooInfo[]
 }
 
 export class TestImmer extends React.Component<TestImmerProps, TestImmerState> {
@@ -51,14 +52,14 @@ export class TestImmer extends React.Component<TestImmerProps, TestImmerState> {
         super(props);
         this.state = {
             foos: [
-                {id: 1, name: 'Hello'},
-                {id: 2, name: 'World'},
-                {id: 3, name: 'Yeah'},
+                { id: 1, name: 'Hello' },
+                { id: 2, name: 'World' },
+                { id: 3, name: 'Yeah' },
             ]
         };
     }
 
-    onModify= (foo: FooInfo) => {
+    onModify = (foo: FooInfo) => {
         this.setState((state) => {
             return produce(state, (draft) => {
                 const id = this.state.foos.findIndex(e => e.id === foo.id);

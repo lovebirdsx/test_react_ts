@@ -1,5 +1,6 @@
 import * as React from "react";
 import { GraphNode, Vector2D } from './GraphNode';
+import { Button } from "theme-ui";
 
 interface State {
     pos: Vector2D;
@@ -21,10 +22,9 @@ export class GraphEditor extends React.Component<unknown, State> {
     render() {
         return (
             <div>
-                <button className='btn btn-block btn-lg btn-primary' onClick={() => this.setPos(100, 0)}>Pos1</button>
-                <button className='btn btn-block btn-lg btn-primary' onClick={() => this.setPos(0, 100)}>Pos2</button>
+                <Button m={10} onClick={() => this.setPos(100, 0)}>Pos1</Button>
+                <Button m={10} onClick={() => this.setPos(0, 100)}>Pos2</Button>
                 <GraphNode pos={this.state.pos}></GraphNode>
-                <h3>This text is form context: {this.context.name} loves {this.context.love}</h3>
             </div>
         );
     }
