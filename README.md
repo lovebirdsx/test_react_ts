@@ -1,46 +1,34 @@
-# Getting Started with Create React App
+# 说明
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 问题
 
-## Available Scripts
+### inject中soucemap的问题
 
-In the project directory, you can run:
+1. 表现
 
-### `npm start`
+运行`npm start`，控制台会出现如下警告：
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+``` log
+WARNING in ./node_modules/inversify/es/utils/js.js
+Module Warning (from ./node_modules/source-map-loader/dist/cjs.js):
+Failed to parse source map from '\test_react_ts\node_modules\inversify\src\utils\js.ts' file: Error: ENOENT: no such file or directory, open '\test_react_ts\node_modules\inversify\src\utils\js.ts'
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+2. 解决
 
-### `npm test`
+* [参考](https://github.com/inversify/InversifyJS/issues/1408)
+* 在react-scripts中的webpack.config.js中添加`ignoreWarnings: [/Failed to parse source map/]`，如下：
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+``` diff
+diff --git a/node_modules/react-scripts/config/webpack.config.js b/node_modules/react-scripts/config/webpack.config.js
+index e465d8e..26ad0fa 100644
+--- a/node_modules/react-scripts/config/webpack.config.js
++++ b/node_modules/react-scripts/config/webpack.config.js
+@@ -792,5 +792,6 @@ module.exports = function (webpackEnv) {
+     // Turn off performance processing because we utilize
+     // our own hints via the FileSizeReporter
+     performance: false,
++    ignoreWarnings: [/Failed to parse source map/],
+   };
+ };
+```

@@ -6,16 +6,12 @@ interface ContextState {
 
 const MyContext = React.createContext<Partial<ContextState>>({})
 
-interface TestContextProps {
-    
-}
-
 interface TestContextState {
     contextState: ContextState;
 }
 
-export class TestContext extends React.Component<TestContextProps, TestContextState> {
-    constructor(props: TestContextProps) {
+export class TestContext extends React.Component<unknown, TestContextState> {
+    constructor(props: unknown) {
         super(props);
         this.state = {
             contextState: {
@@ -36,8 +32,8 @@ export class TestContext extends React.Component<TestContextProps, TestContextSt
         return (
             <div>
                 <MyContext.Provider value = {this.state.contextState}>
-                    <button onClick={() => this.onChangeContext('name1')}>Change name1</button>
-                    <button onClick={() => this.onChangeContext('name2')}>Change name2</button>
+                    <button className='btn btn-block btn-lg btn-primary' onClick={() => this.onChangeContext('name1')}>Change name1</button>
+                    <button className='btn btn-block btn-lg btn-primary' onClick={() => this.onChangeContext('name2')}>Change name2</button>
                     <ContextConsumer></ContextConsumer>
                 </MyContext.Provider>
             </div>

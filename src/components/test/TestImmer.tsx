@@ -31,9 +31,9 @@ function Foo(props: FooProps) {
     return (
         <div>
             <h2>{props.foo.name}</h2>
-            <button onClick={changeName}>Change Name</button>
-            <button onClick={moveUp}>move up</button>
-            <button onClick={moveDown}>move down</button>
+            <button className='btn btn-block btn-lg btn-primary' onClick={changeName}>Change Name</button>
+            <button className='btn btn-block btn-lg btn-primary' onClick={moveUp}>move up</button>
+            <button className='btn btn-block btn-lg btn-primary' onClick={moveDown}>move down</button>
         </div>
     );
 }

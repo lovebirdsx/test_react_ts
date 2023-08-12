@@ -1,65 +1,14 @@
 import React from 'react';
-import './App.css';
-import GraphEditor from './components/GraphEditor';
-import { Hello } from './components/Hello';
-import { TestContext } from './components/TestContext';
-import { TestImmer } from './components/TestImmer';
-import { TestNested } from './components/TestNested';
+import preset from '@rebass/preset'
+import { TestMain } from './components/test/Main';
+import { ThemeProvider } from '@emotion/react';
 
-export interface IPersonContext {
-  name: string;
-  age: number;
-  love: string;
-}
-
-const contextMap: {[name: string] : IPersonContext} = {
-  me: {
-    name: 'lovebird',
-    age: 18,
-    love: 'TypeScript',
-  },
-  foo: {
-    name: 'Foo',
-    age: 21,
-    love: 'JavaScript',
-  },
-  bar: {
-    name: 'Bar',
-    age: 23,
-    love: 'CSharp',
-  }
-}
-
-export const PersonContext = React.createContext<IPersonContext>(contextMap.me);
-
-interface AppState {
-  context: IPersonContext
-}
-
-class App extends React.Component<any, AppState> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      context: contextMap.me
-    }
-  }
-
+class App extends React.Component {
   render(): React.ReactNode {
     return (
-      <div className="App">
-        <PersonContext.Provider value={this.state.context}>
-          <header className="App-header">
-            {/* <button onClick={() => this.setState({context: contextMap.me})}>me</button>
-            <button onClick={() => this.setState({context: contextMap.foo})}>foo</button>
-            <button onClick={() => this.setState({context: contextMap.bar})}>bar</button>
-            <Hello compiler='TypeScript' framework='React'/>
-            <GraphEditor></GraphEditor> */}
-            {/* <TestNested/> */}
-            {/* <TestContext></TestContext> */}
-            <TestImmer></TestImmer>
-          </header>
-        </PersonContext.Provider>
-      </div>
+      <ThemeProvider theme={{}}>
+        <TestMain />
+      </ThemeProvider>
     );
   }
 }
