@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { produce } from 'immer';
-import { Box, Button, Flex, Heading, Label } from 'theme-ui';
+import { Box, Button, Checkbox, FormControlLabel, FormGroup, FormLabel } from '@mui/material';
 
 interface ToDoListDay {
   date: string
@@ -12,11 +12,13 @@ interface ToDoList {
 }
 
 function ToDoListDayView(props: ToDoListDay) {
-  const lists = props.list.map(e => <Label><li>{e}</li></Label>);
+  const lists = props.list.map(e => <FormControlLabel control={<Checkbox />} label={e} />);
   return (
     <Box>
-      <Heading>{props.date}</Heading>
-      {lists}
+      <FormLabel sx={{ fontWeight: 'bold' }}>{props.date}</FormLabel>
+      <FormGroup>
+        {lists}
+      </FormGroup>
     </Box>
   );
 }
@@ -24,9 +26,9 @@ function ToDoListDayView(props: ToDoListDay) {
 function ToDoListView(props: ToDoList) {
   const days = props.days.map(e => <ToDoListDayView date={e.date} list={e.list}></ToDoListDayView>)
   return (
-    <div>
+    <Box sx={{ marginLeft: 1 }}>
       {days}
-    </div>
+    </Box>
   );
 }
 
@@ -103,20 +105,20 @@ export class TestNested extends React.Component<TestNestedProps, TestNestedState
   render() {
     return (
       <div>
-        <Flex>
-          <Button m={10} onClick={this.testModify}>直接修改数据</Button>
-          <Button m={10} onClick={this.testModify2}>新建修改数据</Button>
-        </Flex>
+        <Box>
+          <Button variant='contained' sx={{ margin: 1 }} onClick={this.testModify}>直接修改</Button>
+          <Button variant='contained' sx={{ margin: 1 }} onClick={this.testModify2}>新建修改</Button>
+        </Box>
 
-        <Flex>
-          <Button m={10} onClick={this.testAdd}>直接添加数据</Button>
-          <Button m={10} onClick={this.testAdd2}>新建添加数据</Button>
-        </Flex>
+        <Box>
+          <Button variant='contained' sx={{ margin: 1 }} onClick={this.testAdd}>直接添加</Button>
+          <Button variant='contained' sx={{ margin: 1 }} onClick={this.testAdd2}>新建添加</Button>
+        </Box>
 
-        <Flex>
-          <Button m={10} onClick={this.testDel}>直接删除数据</Button>
-          <Button m={10} onClick={this.testDel2}>新建删除数据</Button>
-        </Flex>
+        <Box>
+          <Button variant='contained' sx={{ margin: 1 }} onClick={this.testDel}>直接删除</Button>
+          <Button variant='contained' sx={{ margin: 1 }} onClick={this.testDel2}>新建删除</Button>
+        </Box>
         <ToDoListView days={this.state.todoList.days}></ToDoListView>
       </div>
     );

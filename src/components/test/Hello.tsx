@@ -1,9 +1,7 @@
-import { Heading } from "theme-ui";
+import { FormLabel } from "@mui/material";
 
 export function Hello() {
     return (
-        <Heading>
-            lovebird loves React
-        </Heading>
+        <FormLabel sx={{fontSize: 'x-large'}}>lovebird loves React</FormLabel>
     );
 }

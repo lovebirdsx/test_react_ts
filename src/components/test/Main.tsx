@@ -1,5 +1,5 @@
 import container from '../../inversify.config'
-import { Box, Flex, Heading, Label, Radio, Divider } from 'theme-ui'
+import { Box, FormControlLabel, FormLabel, Radio } from '@mui/material'
 import { ReactTestManager } from '../../common/test/ReactTestManager';
 import { GraphEditor } from './GraphEditor';
 import { TestContext } from './TestContext';
@@ -10,7 +10,7 @@ import { Hello } from './Hello';
 
 function registerAllTests() {
   const manager = container.resolve(ReactTestManager);
-  manager.registerTest('TestHello', Hello);
+  manager.registerTest('TestHello', () => <Hello/>);
   manager.registerTest('TestContext', () => <TestContext />);
   manager.registerTest('GraphEditor', () => <GraphEditor />);
   manager.registerTest('TestImmer', () => <TestImmer />);
@@ -19,10 +19,9 @@ function registerAllTests() {
 
 function renderTestTitle(props: { name: string, select: boolean, onClick: () => void }) {
   return (
-    <Label>
-      <Radio name='test' value={`$props.select}`} defaultChecked={props.select} onChange={props.onClick} />
-      {props.name}
-    </Label>
+    <FormControlLabel value={props.name} label={props.name} control={
+      <Radio name='test' checked={props.select} defaultChecked={props.select} onChange={props.onClick} />
+    } />
   );
 }
 
@@ -31,16 +30,16 @@ export function TestMain() {
   const [select, setSelect] = useState(0);
 
   return (
-    <Box>
-      <Heading as='h1'>React Test</Heading>
-      <Flex>
-        <Box p={20} backgroundColor={'lightgray'}>
+    <Box p={2}>
+      <FormLabel sx={{fontSize: 'xxx-large'}}>React Test</FormLabel>
+      <Box py={2}>
+        <Box p={2} bgcolor={'lightgray'}>
           {manager.tests.map((e, idx) => renderTestTitle({ name: e.name, select: idx === select, onClick: () => setSelect(idx) }))}
         </Box>
-        <Box p={20}>
+        <Box p={2}>
           {manager.tests[select].render()}
         </Box>
-      </Flex>
+      </Box>
     </Box>
   );
 }
