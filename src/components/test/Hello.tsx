@@ -1,7 +1,7 @@
-import { FormLabel } from "@mui/material";
+import { Typography } from '@mui/material';
 
 export function Hello() {
     return (
-        <FormLabel sx={{fontSize: 'x-large'}}>lovebird loves React</FormLabel>
+        <Typography variant='h3'> lovebird loves React</Typography>
     );
 }

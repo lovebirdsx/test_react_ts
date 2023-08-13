@@ -49,7 +49,7 @@ export class ContextConsumer extends React.Component {
     const context = this.context as ContextState;
     return (
       <Box>
-        <FormLabel>`Context = {context.name}`</FormLabel>
+        <FormLabel sx={{ fontWeight: 'bold' }}>Context = {context.name}</FormLabel>
       </Box>
     );
   }

@@ -1,5 +1,5 @@
 import container from '../../inversify.config'
-import { Box, FormControlLabel, FormLabel, Radio } from '@mui/material'
+import { Box, FormControlLabel, Radio, Typography } from '@mui/material'
 import { ReactTestManager } from '../../common/test/ReactTestManager';
 import { GraphEditor } from './GraphEditor';
 import { TestContext } from './TestContext';
@@ -31,7 +31,7 @@ export function TestMain() {
 
   return (
     <Box p={2}>
-      <FormLabel sx={{fontSize: 'xxx-large'}}>React Test</FormLabel>
+      <Typography variant='h2'>React Test</Typography>
       <Box py={2}>
         <Box p={2} bgcolor={'lightgray'}>
           {manager.tests.map((e, idx) => renderTestTitle({ name: e.name, select: idx === select, onClick: () => setSelect(idx) }))}
