@@ -35,14 +35,14 @@ export class TestContext extends React.Component<unknown, TestContextState> {
                 <MyContext.Provider value = {this.state.contextState}>
                     <Button m={10} onClick={() => this.onChangeContext('name1')}>Change name1</Button>
                     <Button m={10} onClick={() => this.onChangeContext('name2')}>Change name2</Button>
-                    <ContextConsumer></ContextConsumer>
+                    <ContextConsumer/>
                 </MyContext.Provider>
             </div>
         );
     }
 }
 
-export class ContextConsumer extends React.Component<any, any> {
+export class ContextConsumer extends React.Component {
     static contextType = MyContext;
 
     render() {

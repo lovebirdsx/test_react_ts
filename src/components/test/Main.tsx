@@ -1,5 +1,5 @@
 import container from '../../inversify.config'
-import { Box, Flex, Heading, Label, Radio } from 'theme-ui'
+import { Box, Flex, Heading, Label, Radio, Divider } from 'theme-ui'
 import { ReactTestManager } from '../../common/test/ReactTestManager';
 import { GraphEditor } from './GraphEditor';
 import { TestContext } from './TestContext';
@@ -20,7 +20,7 @@ function registerAllTests() {
 function renderTestTitle(props: { name: string, select: boolean, onClick: () => void }) {
   return (
     <Label>
-      <Radio type='radio' name='test' value={props.name} checked={props.select} onChange={props.onClick} />
+      <Radio name='test' value={`$props.select}`} defaultChecked={props.select} onChange={props.onClick} />
       {props.name}
     </Label>
   );
@@ -32,9 +32,9 @@ export function TestMain() {
 
   return (
     <Box>
-      <Heading as={'h1'}>React Test</Heading>
+      <Heading as='h1'>React Test</Heading>
       <Flex>
-        <Box p={20}>
+        <Box p={20} backgroundColor={'lightgray'}>
           {manager.tests.map((e, idx) => renderTestTitle({ name: e.name, select: idx === select, onClick: () => setSelect(idx) }))}
         </Box>
         <Box p={20}>
