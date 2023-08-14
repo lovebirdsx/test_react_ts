@@ -4,10 +4,12 @@ import { fetchCount } from './counterAPI';
 
 interface CounterState {
   value: number;
+  status: 'idle' | 'loading';
 }
 
 const initialState: CounterState = {
   value: 0,
+  status: 'idle'
 };
 
 export const counterSlice = createSlice({
@@ -23,6 +25,15 @@ export const counterSlice = createSlice({
     incrementByAmount: (state: CounterState, action: PayloadAction<number>) => {
       state.value += action.payload;
     }
+  },
+  extraReducers: (builder) => {
+    builder.addCase(incrementAsync.pending, (state: CounterState) => {
+      state.status = 'loading';
+    });
+    builder.addCase(incrementAsync.fulfilled, (state: CounterState, action: PayloadAction<number>) => {
+      state.status = 'idle';
+      state.value += action.payload;
+    });
   }
 });
 
