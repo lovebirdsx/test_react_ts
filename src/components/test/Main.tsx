@@ -23,7 +23,7 @@ function registerAllTests() {
 
 function renderTestTitle(props: { name: string, select: boolean, onClick: () => void }) {
   return (
-    <Grid xs>
+    <Grid key={props.name}>
       <FormControlLabel value={props.name} label={props.name} control={
         <Radio name='test' checked={props.select} defaultChecked={props.select} onChange={props.onClick} />
       } />

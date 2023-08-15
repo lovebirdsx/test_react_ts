@@ -1,6 +1,6 @@
 import React from 'react';
 import { TestMain } from './components/test/Main';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './app/store';
 import { SinglePostPage } from './features/posts/SinglePostPage';
@@ -11,12 +11,12 @@ class App extends React.Component {
     return (
       <Provider store={store}>
         <BrowserRouter>
-          <Switch>
-            <Route exact path='/' component={PostsList} />
-            <Route exact path='/tests' component={TestMain} />
-            <Route exact path='/posts' component={PostsList} />
-            <Route exact path='/posts/:postId' component={SinglePostPage} />
-          </Switch>
+          <Routes>
+            <Route path='/'  Component={PostsList} />
+            <Route path='/tests' Component={TestMain} />
+            <Route path='/posts' Component={PostsList} />
+            <Route path='/posts/:postId' Component={SinglePostPage} />
+          </Routes>
         </BrowserRouter>
       </Provider>
     );
