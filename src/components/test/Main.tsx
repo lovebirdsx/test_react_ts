@@ -25,7 +25,7 @@ function renderTestTitle(props: { name: string, select: boolean, onClick: () => 
   return (
     <Grid key={props.name}>
       <FormControlLabel value={props.name} label={props.name} control={
-        <Radio name='test' checked={props.select} defaultChecked={props.select} onChange={props.onClick} />
+        <Radio name='test' checked={props.select} onChange={props.onClick} />
       } />
     </Grid>
   );

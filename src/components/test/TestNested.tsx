@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { produce } from 'immer';
 import { Box, Button, Checkbox, FormControlLabel, FormGroup, FormLabel } from '@mui/material';
+import { nanoid } from '@reduxjs/toolkit';
 
 interface ToDoListDay {
+  id: string;
   date: string
   list: string[]
 }
@@ -12,7 +14,7 @@ interface ToDoList {
 }
 
 function ToDoListDayView(props: ToDoListDay) {
-  const lists = props.list.map(e => <FormControlLabel control={<Checkbox />} label={e} />);
+  const lists = props.list.map(e => <FormControlLabel key={e} control={<Checkbox />} label={e} />);
   return (
     <Box>
       <FormLabel sx={{ fontWeight: 'bold' }}>{props.date}</FormLabel>
@@ -24,7 +26,7 @@ function ToDoListDayView(props: ToDoListDay) {
 }
 
 function ToDoListView(props: ToDoList) {
-  const days = props.days.map(e => <ToDoListDayView date={e.date} list={e.list}></ToDoListDayView>)
+  const days = props.days.map(e => <ToDoListDayView key={e.id} {...e}></ToDoListDayView>)
   return (
     <Box sx={{ marginLeft: 1 }}>
       {days}
@@ -48,9 +50,9 @@ export class TestNested extends React.Component<TestNestedProps, TestNestedState
       name: 'foo',
       todoList: {
         days: [
-          { date: '2022-01-01', list: ['foo1', 'bar1', 'car1'] },
-          { date: '2022-01-02', list: ['foo2', 'bar2', 'car2'] },
-          { date: '2022-01-03', list: ['foo3', 'bar3', 'car3'] },
+          { id: '1', date: '2022-01-01', list: ['foo1', 'bar1', 'car1'] },
+          { id: '2', date: '2022-01-02', list: ['foo2', 'bar2', 'car2'] },
+          { id: '3', date: '2022-01-03', list: ['foo3', 'bar3', 'car3'] },
         ]
       }
     };
@@ -74,7 +76,7 @@ export class TestNested extends React.Component<TestNestedProps, TestNestedState
   // 这里会被调用两次,由于strict mode所致,参考https://reactjs.org/docs/strict-mode.html
   testAdd = () => {
     this.setState((state, props) => {
-      state.todoList.days.push({ date: '2022-01-04', list: ['foo4', 'bar4'] });
+      state.todoList.days.push({ id: nanoid(), date: '2022-01-04', list: ['foo4', 'bar4'] });
       return state;
     });
   };
@@ -82,7 +84,7 @@ export class TestNested extends React.Component<TestNestedProps, TestNestedState
   testAdd2 = () => {
     this.setState((state, props) => {
       return produce(state, draft => {
-        draft.todoList.days.push({ date: '2022-01-04', list: ['foo4', 'bar4'] });
+        draft.todoList.days.push({ id: nanoid(), date: '2022-01-04', list: ['foo4', 'bar4'] });
       });
     });
   };
