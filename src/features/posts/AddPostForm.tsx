@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, FormControl, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { postAdded } from './postSlice';
-import { useAppDispatch } from '../../app/hook';
+import { selectAllUsers } from '../users/userSlice';
+import { useAppDispatch, useAppSelector } from '../../app/hook';
 import { nanoid } from '@reduxjs/toolkit';
 
 export function AddPostForm() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [userId, setUserId] = useState(1);
+
+  const users = useAppSelector(selectAllUsers);
 
   const dispath = useAppDispatch();
   const onTitleChanged = (e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
@@ -14,7 +18,7 @@ export function AddPostForm() {
   const onSavePostClicked = () => {
     if (title && content) {
       const id = nanoid();
-      dispath(postAdded({ id, title, content }));
+      dispath(postAdded({ id, title, content, userId }));
       setTitle('');
       setContent('');
     }
@@ -44,7 +48,15 @@ export function AddPostForm() {
             onChange={onContentChanged}
           />
         </Box>
-        <Box py={2}>
+        <Box py={1}>
+          <FormControl variant='outlined'>
+            <Typography variant='h6'>Author</Typography>
+            <Select value={userId} onChange={(e) => setUserId(e.target.value as number)} >
+              {users.map((user) => (<MenuItem value={user.id}>{user.name}</MenuItem>))}
+            </Select>
+          </FormControl>
+        </Box>
+        <Box py={1}>
           <Button variant='contained' color='primary' onClick={onSavePostClicked}>
             Save Post
           </Button>

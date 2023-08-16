@@ -8,7 +8,6 @@ import { TestNested } from './TestNested';
 import { useState } from 'react';
 import { Hello } from './Hello';
 import { Counter } from '../../features/counter/Counter';
-import { PostsList } from '../../features/posts/PostList';
 
 function registerAllTests() {
   const manager = container.resolve(ReactTestManager);
@@ -18,7 +17,6 @@ function registerAllTests() {
   manager.registerTest('TestImmer', () => <TestImmer />);
   manager.registerTest('TestNested', () => <TestNested />);
   manager.registerTest('Counter', () => <Counter />);
-  manager.registerTest('PostsList', () => <PostsList />);
 }
 
 function renderTestTitle(props: { name: string, select: boolean, onClick: () => void }) {
