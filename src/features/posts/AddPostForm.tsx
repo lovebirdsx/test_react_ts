@@ -52,7 +52,7 @@ export function AddPostForm() {
           <FormControl variant='outlined'>
             <Typography variant='h6'>Author</Typography>
             <Select value={userId} onChange={(e) => setUserId(e.target.value as number)} >
-              {users.map((user) => (<MenuItem value={user.id}>{user.name}</MenuItem>))}
+              {users.map((user) => (<MenuItem key={user.id} value={user.id}>{user.name}</MenuItem>))}
             </Select>
           </FormControl>
         </Box>
