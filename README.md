@@ -6,6 +6,18 @@
 
 ## 问题
 
+### 浏览器报错：MockServiceWorker.js无法下载
+
+1. 表现
+
+运行`npm start`，浏览器报错：
+
+`Failed to register a ServiceWorker for scope ('http://localhost:3000/') with script ('http://localhost:3000/mockServiceWorker.js'): The script has an unsupported MIME type ('text/html').`
+
+2. 解决
+
+* 拷贝[mockServiceWorker.js](./node_modules/msw/lib/mockServiceWorker.js)到public目录下
+
 ### inject中soucemap的问题
 
 1. 表现
@@ -21,7 +33,10 @@ Failed to parse source map from '\test_react_ts\node_modules\inversify\src\utils
 2. 解决
 
 * [参考](https://github.com/inversify/InversifyJS/issues/1408)
-* 在react-scripts中的webpack.config.js中添加`ignoreWarnings: [/Failed to parse source map/]`，如下：
+* 打开：[react-scripts中的webpack.config.js](./node_modules/react-scripts/config/webpack.config.js)
+* 添加：`ignoreWarnings: [/Failed to parse source map/]`，如下：
+
+``` js
 
 ``` diff
 diff --git a/node_modules/react-scripts/config/webpack.config.js b/node_modules/react-scripts/config/webpack.config.js

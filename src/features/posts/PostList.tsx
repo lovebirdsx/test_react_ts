@@ -1,13 +1,30 @@
-import { useAppSelector } from '../../app/hook';
-import { selectAllPosts } from './postSlice';
+import { useAppSelector, useAppDispatch } from '../../app/hook';
+import { fetchPosts, selectAllPosts } from './postSlice';
 import { selectAllUsers } from '../users/userSlice';
 import { Box, Card, CardContent, Typography } from '@mui/material';
 import { AddPostForm } from './AddPostForm';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export function PostsList() {
   const posts = useAppSelector(selectAllPosts);
+  const postStatus = useAppSelector(state => state.posts.status);
+  const error = useAppSelector(state => state.posts.error);
   const users = useAppSelector(selectAllUsers);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (postStatus === 'idle') {
+      dispatch(fetchPosts());
+    }
+  }, [postStatus, dispatch]);
+
+  if (postStatus === 'loading') {
+    return <Typography variant='h2'>Loading...</Typography>;
+  } else if (postStatus === 'failed') {
+    return <Typography variant='h2'>{error}</Typography>;
+  }
+
   const renderedPosts = posts.map(post => (
     <Card key={post.id} sx={{ marginTop: 2 }} variant='outlined'>
       <CardContent>

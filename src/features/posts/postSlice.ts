@@ -1,26 +1,44 @@
-import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { Post } from '../../app/types';
 import { RootState } from '../../app/store';
+import { client } from '../../api/client';
+
+interface IPostsState {
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error?: string;
+}
 
 const postAdapter = createEntityAdapter<Post>({
   selectId: (post) => post.id,
   sortComparer: (a, b) => b.title.localeCompare(a.title),
 });
 
-const initialState = postAdapter.getInitialState();
-initialState.ids = ['0', '1', '2'];
-initialState.entities = {
-  '0': { id: '0', title: 'Redux', content: 'State management', userId: 1 },
-  '1': { id: '1', title: 'React', content: 'UI library', userId: 2 },
-  '2': { id: '2', title: 'React-Redux', content: 'React bindings', userId: 1 },
-}
+export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
+  const res = await client.get('/fakeApi/posts');
+  return res.data as Post[];
+});
 
 const postSlice = createSlice({
   name: 'posts',
-  initialState,
+  initialState: postAdapter.getInitialState<IPostsState>({
+    status: 'idle',
+  }),
   reducers: {
     postAdded: postAdapter.addOne,
     postUpdated: postAdapter.updateOne,
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchPosts.pending, (state) => {
+      state.status = 'loading';
+    });
+    builder.addCase(fetchPosts.fulfilled, (state, action) => {
+      state.status = 'succeeded';
+      postAdapter.upsertMany(state, action.payload);
+    });
+    builder.addCase(fetchPosts.rejected, (state, action) => {
+      state.status = 'failed';
+      state.error = action.error.message;
+    });
   }
 });
 

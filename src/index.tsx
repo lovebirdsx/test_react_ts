@@ -4,12 +4,13 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from '@emotion/react';
 import theme from './theme';
-import { getWorker } from './api/server';
+import { worker } from './api/server';
 import { CssBaseline } from '@mui/material';
 
 async function main() {
-  const worker = getWorker();
-  await worker.start({ onUnhandledRequest: 'bypass'});
+  if (process.env.NODE_ENV === 'development') {
+    await worker.start({ onUnhandledRequest: 'bypass'});
+  }
 
   const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
   root.render(

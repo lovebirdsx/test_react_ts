@@ -1,5 +1,4 @@
-import { SetupWorker, rest, setupWorker } from 'msw';
-import { SetupServer, setupServer } from 'msw/node';
+import { rest, setupWorker } from 'msw';
 import { factory, oneOf, manyOf, primaryKey } from '@mswjs/data';
 import { nanoid } from '@reduxjs/toolkit';
 import { faker } from '@faker-js/faker';
@@ -10,7 +9,7 @@ import { parseISO } from 'date-fns';
 const NUM_USERS = 3;
 const POSTS_PER_USER = 3;
 const RECENT_NOTIFICATIONS_DAYS = 7;
-const ARTIFICIAL_DELAY_MS = 0;
+const ARTIFICIAL_DELAY_MS = 2000;
 
 let useSeededRNG = true;
 let rng = seedrandom();
@@ -229,21 +228,7 @@ export const handlers = [
   }),
 ];
 
-let worker: SetupWorker | undefined = undefined;
-export function getWorker() {
-  if (!worker) {
-    worker = setupWorker(...handlers);
-  }
-  return worker;
-}
-
-let server: SetupServer | undefined = undefined;
-export function getServer() {
-  if (!server) {
-    server = setupServer(...handlers);
-  }
-  return server;
-}
+export const worker = setupWorker(...handlers);
 
 const socketServer = new MockSocketServer('ws://localhost');
 let currentSocket: any;
