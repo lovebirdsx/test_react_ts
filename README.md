@@ -36,8 +36,6 @@ Failed to parse source map from '\test_react_ts\node_modules\inversify\src\utils
 * 打开：[react-scripts中的webpack.config.js](./node_modules/react-scripts/config/webpack.config.js)
 * 添加：`ignoreWarnings: [/Failed to parse source map/]`，如下：
 
-``` js
-
 ``` diff
 diff --git a/node_modules/react-scripts/config/webpack.config.js b/node_modules/react-scripts/config/webpack.config.js
 index e465d8e..26ad0fa 100644

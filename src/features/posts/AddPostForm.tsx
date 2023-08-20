@@ -8,7 +8,7 @@ import { nanoid } from '@reduxjs/toolkit';
 export function AddPostForm() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [userId, setUserId] = useState(1);
+  const [user, setUser] = useState('');
 
   const users = useAppSelector(selectAllUsers);
 
@@ -18,7 +18,7 @@ export function AddPostForm() {
   const onSavePostClicked = () => {
     if (title && content) {
       const id = nanoid();
-      dispath(postAdded({ id, title, content, userId }));
+      dispath(postAdded({ id, title, content, user }));
       setTitle('');
       setContent('');
     }
@@ -51,7 +51,7 @@ export function AddPostForm() {
         <Box py={1}>
           <FormControl variant='outlined'>
             <Typography variant='h6'>Author</Typography>
-            <Select value={userId} onChange={(e) => setUserId(e.target.value as number)} >
+            <Select value={user} onChange={(e) => setUser(e.target.value)} >
               {users.map((user) => (<MenuItem key={user.id} value={user.id}>{user.name}</MenuItem>))}
             </Select>
           </FormControl>

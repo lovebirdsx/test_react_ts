@@ -6,11 +6,15 @@ import { ThemeProvider } from '@emotion/react';
 import theme from './theme';
 import { worker } from './api/server';
 import { CssBaseline } from '@mui/material';
+import { store } from './app/store';
+import { fetchUsers } from './features/users/userSlice';
 
 async function main() {
   if (process.env.NODE_ENV === 'development') {
     await worker.start({ onUnhandledRequest: 'bypass'});
   }
+
+  store.dispatch(fetchUsers());
 
   const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
   root.render(

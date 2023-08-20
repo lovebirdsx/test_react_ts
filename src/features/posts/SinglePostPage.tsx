@@ -12,7 +12,7 @@ export function SinglePostPage() {
   }
 
   const post = useAppSelector(state => selectPostById(state, postId));
-  const user = useAppSelector(state => selectUserById(state, post?.userId || 0));
+  const user = useAppSelector(state => selectUserById(state, post?.user || ''));
   if (!post) {
     return (
       <Box>

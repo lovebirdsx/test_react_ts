@@ -1,26 +1,30 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { createEntityAdapter } from "@reduxjs/toolkit";
-import { User } from "../../app/types";
-import { RootState } from "../../app/store";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createEntityAdapter } from '@reduxjs/toolkit';
+import { User } from '../../app/types';
+import { RootState } from '../../app/store';
+import { client } from '../../api/client';
 
 const userAdapter = createEntityAdapter<User>({
   selectId: (user) => user.id,
   sortComparer: (a, b) => a.name.localeCompare(b.name),
 });
 
-const initialState = userAdapter.getInitialState();
-initialState.ids = [1, 2]
-initialState.entities = {
-  1: { name: 'John', id: 1 },
-  2: { name: 'Jane', id: 2 },
-}
+export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
+  const response = await client.get('/fakeApi/users');
+  return response.data;
+});
 
 const userSlice = createSlice({
-  name: "users",
-  initialState,
+  name: 'users',
+  initialState: userAdapter.getInitialState(),
   reducers: {
     addUser: userAdapter.addOne,
     updateUser: userAdapter.updateOne,
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchUsers.fulfilled, (state, action) => {
+      userAdapter.setAll(state, action.payload);
+    });
   }
 });
 

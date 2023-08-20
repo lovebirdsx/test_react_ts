@@ -2,10 +2,10 @@ export interface Post {
   id: string;
   title: string;
   content: string;
-  userId: number;
+  user: string;
 }
 
 export interface User {
-  id: number;
+  id: string;
   name: string;
 }
