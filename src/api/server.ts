@@ -1,4 +1,4 @@
-import { rest, setupWorker } from 'msw';
+import { SetupWorker, rest, setupWorker } from 'msw';
 import { factory, oneOf, manyOf, primaryKey } from '@mswjs/data';
 import { nanoid } from '@reduxjs/toolkit';
 import { faker } from '@faker-js/faker';
@@ -228,7 +228,15 @@ export const handlers = [
   }),
 ];
 
-export const worker = setupWorker(...handlers);
+// 需要的时候才创建 worker，避免nodejs环境下的测试报错
+let worker: SetupWorker | undefined = undefined;
+export function getWorker() {
+  if (!worker) {
+    worker = setupWorker(...handlers);
+  }
+
+  return worker;
+}
 
 const socketServer = new MockSocketServer('ws://localhost');
 let currentSocket: any;

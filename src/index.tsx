@@ -4,14 +4,14 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from '@emotion/react';
 import theme from './theme';
-import { worker } from './api/server';
+import { getWorker } from './api/server';
 import { CssBaseline } from '@mui/material';
 import { store } from './app/store';
 import { fetchUsers } from './features/users/userSlice';
 
 async function main() {
   if (process.env.NODE_ENV === 'development') {
-    await worker.start({ onUnhandledRequest: 'bypass'});
+    await getWorker().start({ onUnhandledRequest: 'bypass'});
   }
 
   store.dispatch(fetchUsers());
