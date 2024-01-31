@@ -8,7 +8,7 @@ export const store = configureStore({
     counter: counterReducer,
     posts: postReducer,
     users: userReducer,
-  }
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;

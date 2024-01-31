@@ -1,7 +1,5 @@
-import { Typography } from '@mui/material';
+import { Typography } from "@mui/material";
 
 export function Hello() {
-    return (
-        <Typography variant='h3'> lovebird loves React</Typography>
-    );
+  return <Typography variant="h3"> lovebird loves React</Typography>;
 }
