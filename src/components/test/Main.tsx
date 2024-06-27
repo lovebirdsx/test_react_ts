@@ -11,6 +11,7 @@ import { Counter } from "../../features/counter/Counter";
 import { CounterWrapped } from "../../features/counter/Counter2";
 import { TestFunctionComponent } from "./TestFunctionComponent";
 import { TestSchema } from "./TestSchema";
+import { TestSetState } from "./TestSetState";
 
 function registerAllTests() {
   const manager = container.resolve(ReactTestManager);
@@ -25,6 +26,7 @@ function registerAllTests() {
     <TestFunctionComponent />
   ));
   manager.registerTest("TestSchema", () => <TestSchema />);
+  manager.registerTest("TestSetState", () => <TestSetState />);
 }
 
 function renderTestTitle(props: {
