@@ -1,27 +1,29 @@
-import React from "react";
-import { Box, Button, Typography } from "@mui/material";
-import { legacy_createStore } from "@reduxjs/toolkit";
-import { Provider, connect } from "react-redux";
+import React from 'react';
+import { Box, Button, Typography } from '@mui/material';
+// eslint-disable-next-line camelcase
+import { legacy_createStore } from '@reduxjs/toolkit';
+import { Provider, connect } from 'react-redux';
 
 // 使用connect方式来连接redux
 
 const increment = () => {
   return {
-    type: "increment",
+    type: 'increment',
   };
 };
 
 const decrement = () => {
   return {
-    type: "decrement",
+    type: 'decrement',
   };
 };
 
+// eslint-disable-next-line default-param-last
 const counter = (state = 0, action: any) => {
   switch (action.type) {
-    case "increment":
+    case 'increment':
       return state + 1;
-    case "decrement":
+    case 'decrement':
       return state - 1;
     default:
       return state;
@@ -34,19 +36,11 @@ function Counter2(props: any) {
   return (
     <Provider store={store}>
       <Box display="flex" p={1}>
-        <Button
-          variant="contained"
-          sx={{ margin: 1 }}
-          onClick={() => props.decrement()}
-        >
+        <Button variant="contained" sx={{ margin: 1 }} onClick={() => props.decrement()}>
           -
         </Button>
         <Typography variant="h3">{props.count}</Typography>
-        <Button
-          variant="contained"
-          sx={{ margin: 1 }}
-          onClick={() => props.increment()}
-        >
+        <Button variant="contained" sx={{ margin: 1 }} onClick={() => props.increment()}>
           +
         </Button>
       </Box>
@@ -70,7 +64,5 @@ const mapDispatchToProps = (dispatch: any) => {
 const connectedCounter = connect(mapStateToProps, mapDispatchToProps)(Counter2);
 
 export function CounterWrapped() {
-  return (
-    <Provider store={store}>{React.createElement(connectedCounter)}</Provider>
-  );
+  return <Provider store={store}>{React.createElement(connectedCounter)}</Provider>;
 }

@@ -1,10 +1,10 @@
-import { Box, Card, CardContent, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
-import { useEffect } from "react";
-import { useAppSelector, useAppDispatch } from "../../app/hook";
-import { fetchPosts, selectAllPosts } from "./postSlice";
-import { selectAllUsers } from "../users/userSlice";
-import { AddPostForm } from "./AddPostForm";
+import { Box, Card, CardContent, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useAppSelector, useAppDispatch } from '../../app/hook';
+import { fetchPosts, selectAllPosts } from './postSlice';
+import { selectAllUsers } from '../users/userSlice';
+import { AddPostForm } from './AddPostForm';
 
 export function PostsList() {
   const posts = useAppSelector(selectAllPosts);
@@ -14,15 +14,15 @@ export function PostsList() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (postStatus === "idle") {
+    if (postStatus === 'idle') {
       dispatch(fetchPosts());
     }
   }, [postStatus, dispatch]);
 
-  if (postStatus === "loading") {
+  if (postStatus === 'loading') {
     return <Typography variant="h2">Loading...</Typography>;
   }
-  if (postStatus === "failed") {
+  if (postStatus === 'failed') {
     return <Typography variant="h2">{error}</Typography>;
   }
 
@@ -30,20 +30,16 @@ export function PostsList() {
     <Card key={post.id} sx={{ marginTop: 2 }} variant="outlined">
       <CardContent>
         <Typography variant="h4">{post.title}</Typography>
-        <Typography variant="body1" color={"GrayText"}>
+        <Typography variant="body1" color={'GrayText'}>
           {post.content}
         </Typography>
-        <Box
-          display={"flex"}
-          alignItems={"flex-end"}
-          justifyContent={"space-between"}
-        >
-          <Typography variant="body1" color={"GrayText"}>
+        <Box display={'flex'} alignItems={'flex-end'} justifyContent={'space-between'}>
+          <Typography variant="body1" color={'GrayText'}>
             By {users.find((e) => e.id === post.user)?.name}
           </Typography>
           <Box m={1}>
             <Link to={`/posts/${post.id}`}>
-              <Typography variant="body2" color={"GrayText"}>
+              <Typography variant="body2" color={'GrayText'}>
                 View Post
               </Typography>
             </Link>

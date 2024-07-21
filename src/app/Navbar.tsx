@@ -1,5 +1,5 @@
-import { Grid } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Grid } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 export function NavBar() {
   return (

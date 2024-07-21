@@ -39,14 +39,14 @@ const postSlice = createSlice({
       state.status = 'failed';
       state.error = action.error.message;
     });
-  }
+  },
 });
 
 export const {
   selectAll: selectAllPosts,
   selectIds: selectPostIds,
   selectById: selectPostById,
-} = postAdapter.getSelectors<RootState>(state => state.posts);
+} = postAdapter.getSelectors<RootState>((state) => state.posts);
 export const { postAdded, postUpdated } = postSlice.actions;
 
 export default postSlice.reducer;

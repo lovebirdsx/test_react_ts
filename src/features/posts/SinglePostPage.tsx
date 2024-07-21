@@ -1,19 +1,17 @@
-import { useParams, Link } from "react-router-dom";
-import { Box, Card, CardContent, Typography } from "@mui/material";
-import { selectPostById } from "./postSlice";
-import { selectUserById } from "../users/userSlice";
-import { useAppSelector } from "../../app/hook";
+import { useParams, Link } from 'react-router-dom';
+import { Box, Card, CardContent, Typography } from '@mui/material';
+import { selectPostById } from './postSlice';
+import { selectUserById } from '../users/userSlice';
+import { useAppSelector } from '../../app/hook';
 
 export function SinglePostPage() {
   const { postId } = useParams<{ postId: string }>();
   if (!postId) {
-    throw new Error("Post ID is required!");
+    throw new Error('Post ID is required!');
   }
 
   const post = useAppSelector((state) => selectPostById(state, postId));
-  const user = useAppSelector((state) =>
-    selectUserById(state, post?.user || ""),
-  );
+  const user = useAppSelector((state) => selectUserById(state, post?.user || ''));
   if (!post) {
     return (
       <Box>
@@ -27,10 +25,10 @@ export function SinglePostPage() {
       <Card variant="outlined">
         <CardContent>
           <Typography variant="h4">{post.title}</Typography>
-          <Typography variant="body1" color={"GrayText"}>
+          <Typography variant="body1" color={'GrayText'}>
             By {user?.name}
           </Typography>
-          <Typography variant="body1" color={"GrayText"}>
+          <Typography variant="body1" color={'GrayText'}>
             {post.content}
           </Typography>
         </CardContent>

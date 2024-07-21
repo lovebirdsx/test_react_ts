@@ -68,6 +68,8 @@
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-empty-function": "off",
     "max-len": "off",
-    "no-await-in-loop": "off"
+    "no-await-in-loop": "off",
+    "no-nested-ternary": "off",
+    "@typescript-eslint/no-explicit-any": "off"
   }
 }

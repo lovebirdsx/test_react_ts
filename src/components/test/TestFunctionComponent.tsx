@@ -1,11 +1,11 @@
-import * as React from "react";
-import { Box, Button, FormLabel } from "@mui/material";
+import * as React from 'react';
+import { Box, Button, FormLabel } from '@mui/material';
 
 function createInitialState() {
   return [
-    { id: 1, name: "Hello" },
-    { id: 2, name: "World" },
-    { id: 3, name: "Yeah" },
+    { id: 1, name: 'Hello' },
+    { id: 2, name: 'World' },
+    { id: 3, name: 'Yeah' },
   ];
 }
 
@@ -29,7 +29,7 @@ export function TestFunctionComponent() {
           <FormLabel key={e.id}>{e.name}</FormLabel>
           <Button
             onClick={() => {
-              changeName({ id: e.id, name: "New Name" });
+              changeName({ id: e.id, name: 'New Name' });
             }}
           >
             Change Name

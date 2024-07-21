@@ -1,26 +1,26 @@
-import React, { useLayoutEffect, useState } from 'react';
-import { TestMain } from './components/test/Main';
+import { Component, ReactNode, useLayoutEffect, useRef, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { TestMain } from './components/test/Main';
 import { store } from './app/store';
 import { SinglePostPage } from './features/posts/SinglePostPage';
 import { PostsList } from './features/posts/PostList';
 import { NavBar } from './app/Navbar';
 import { EditPostForm } from './features/posts/EditPostForm';
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 
-export class App extends React.Component {
-  render(): React.ReactNode {
+export class App extends Component {
+  render(): ReactNode {
     return (
       <Provider store={store}>
         <BrowserRouter>
           <NavBar />
           <Routes>
-            <Route path='/' Component={PostsList} />
-            <Route path='/tests' Component={TestMain} />
-            <Route path='/posts' Component={PostsList} />
-            <Route path='/posts/:postId' Component={SinglePostPage} />
-            <Route path='/editPost/:postId' Component={EditPostForm} />
+            <Route path="/" Component={PostsList} />
+            <Route path="/tests" Component={TestMain} />
+            <Route path="/posts" Component={PostsList} />
+            <Route path="/posts/:postId" Component={SinglePostPage} />
+            <Route path="/editPost/:postId" Component={EditPostForm} />
           </Routes>
         </BrowserRouter>
       </Provider>
@@ -32,11 +32,8 @@ export class App extends React.Component {
 export function TestScroll() {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      <Box sx={{ backgroundColor: 'primary.main', p: 2 }}>
-        Banner 内容
-      </Box>
+      <Box sx={{ backgroundColor: 'primary.main', p: 2 }}>Banner 内容</Box>
       <Box sx={{ flex: 1, display: 'flex', height: 0 }}>
-
         <Box sx={{ flex: 1, overflowY: 'auto', height: '100%', p: 2 }}>
           <Box height={400} bgcolor={'gray'} p={2} />
         </Box>
@@ -61,7 +58,6 @@ export function TestScroll() {
             </Box>
           </Box>
         </Box>
-
       </Box>
     </Box>
   );
@@ -70,11 +66,11 @@ export function TestScroll() {
 // 测试Table滚动条: 通过ref来计算高度
 export function TestTableScroll1() {
   const minWidth = 120;
-  const refOut = React.useRef<HTMLDivElement>(null);
-  const refHeader = React.useRef<HTMLDivElement>(null);
+  const refOut = useRef<HTMLDivElement>(null);
+  const refHeader = useRef<HTMLDivElement>(null);
 
   const defaultCellStyle: React.CSSProperties = {
-    minWidth: minWidth,
+    minWidth,
   };
 
   // 固定列样式
@@ -123,9 +119,9 @@ export function TestTableScroll1() {
   return (
     <Box maxHeight={'100vh'} ref={refOut}>
       <Box display={'flex'} alignItems={'center'} flexDirection={'column'} ref={refHeader}>
-        <Typography variant='h6'>表格标题</Typography>
-        <Typography variant='h6'>表格标题</Typography>
-        <Typography variant='h6'>表格标题</Typography>
+        <Typography variant="h6">表格标题</Typography>
+        <Typography variant="h6">表格标题</Typography>
+        <Typography variant="h6">表格标题</Typography>
       </Box>
       <Box flexGrow={1}>
         <TableContainer sx={{ height: `${tableHeight}px` }}>
@@ -133,11 +129,16 @@ export function TestTableScroll1() {
             <TableHead>
               <TableRow>
                 {Array.from({ length: columeCount }, (_, i) => {
-                  let style = i === 0 ? stickyCellLeftStyle : i === columeCount - 1 ? stickyCellRightStyle : defaultCellStyle;
+                  let style =
+                    i === 0 ? stickyCellLeftStyle : i === columeCount - 1 ? stickyCellRightStyle : defaultCellStyle;
                   if (i === 0 || i === columeCount - 1) {
-                    style = { ...style, zIndex: 101 }
+                    style = { ...style, zIndex: 101 };
                   }
-                  return <TableCell key={i} style={style}>表头{i}</TableCell>
+                  return (
+                    <TableCell key={i} style={style}>
+                      表头{i}
+                    </TableCell>
+                  );
                 })}
               </TableRow>
             </TableHead>
@@ -145,7 +146,14 @@ export function TestTableScroll1() {
               {Array.from({ length: 100 }, (_, i) => (
                 <TableRow key={i}>
                   {Array.from({ length: columeCount }, (_, j) => (
-                    <TableCell key={j} style={j === 0 ? stickyCellLeftStyle : j === columeCount - 1 ? stickyCellRightStyle : defaultCellStyle}>单元格{i}-{j}</TableCell>
+                    <TableCell
+                      key={j}
+                      style={
+                        j === 0 ? stickyCellLeftStyle : j === columeCount - 1 ? stickyCellRightStyle : defaultCellStyle
+                      }
+                    >
+                      单元格{i}-{j}
+                    </TableCell>
                   ))}
                 </TableRow>
               ))}
@@ -161,7 +169,7 @@ export function TestTableScroll1() {
 export function TestTableScroll2() {
   const minWidth = 120;
   const defaultCellStyle: React.CSSProperties = {
-    minWidth: minWidth,
+    minWidth,
   };
 
   // 固定列样式
@@ -186,7 +194,7 @@ export function TestTableScroll2() {
   return (
     <Box display="flex" flexDirection="column" maxHeight="100vh">
       <Box display={'flex'} alignItems={'center'} flexDirection={'column'}>
-        <Typography variant='h6'>表格标题</Typography>
+        <Typography variant="h6">表格标题</Typography>
       </Box>
       <Box sx={{ flex: 1, display: 'flex', height: 0 }}>
         <TableContainer>
@@ -194,11 +202,16 @@ export function TestTableScroll2() {
             <TableHead>
               <TableRow>
                 {Array.from({ length: columeCount }, (_, i) => {
-                  let style = i === 0 ? stickyCellLeftStyle : i === columeCount - 1 ? stickyCellRightStyle : defaultCellStyle;
+                  let style =
+                    i === 0 ? stickyCellLeftStyle : i === columeCount - 1 ? stickyCellRightStyle : defaultCellStyle;
                   if (i === 0 || i === columeCount - 1) {
-                    style = { ...style, zIndex: 101 }
+                    style = { ...style, zIndex: 101 };
                   }
-                  return <TableCell key={i} style={style}>表头{i}</TableCell>
+                  return (
+                    <TableCell key={i} style={style}>
+                      表头{i}
+                    </TableCell>
+                  );
                 })}
               </TableRow>
             </TableHead>
@@ -206,7 +219,14 @@ export function TestTableScroll2() {
               {Array.from({ length: 100 }, (_, i) => (
                 <TableRow key={i}>
                   {Array.from({ length: columeCount }, (_, j) => (
-                    <TableCell key={j} style={j === 0 ? stickyCellLeftStyle : j === columeCount - 1 ? stickyCellRightStyle : defaultCellStyle}>单元格{i}-{j}</TableCell>
+                    <TableCell
+                      key={j}
+                      style={
+                        j === 0 ? stickyCellLeftStyle : j === columeCount - 1 ? stickyCellRightStyle : defaultCellStyle
+                      }
+                    >
+                      单元格{i}-{j}
+                    </TableCell>
                   ))}
                 </TableRow>
               ))}

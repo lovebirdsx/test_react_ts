@@ -1,22 +1,15 @@
 # 说明
 
+## 指令
+
+* `npm i`：安装依赖
+* `npm start`：启动项目
+
 ## 相关库
 
 * [material-ui](https://mui.com/material-ui/getting-started/usage/)
 
 ## 问题
-
-### 浏览器报错：MockServiceWorker.js无法下载
-
-1. 表现
-
-运行`npm start`，浏览器报错：
-
-`Failed to register a ServiceWorker for scope ('http://localhost:3000/') with script ('http://localhost:3000/mockServiceWorker.js'): The script has an unsupported MIME type ('text/html').`
-
-2. 解决
-
-* 拷贝[mockServiceWorker.js](./node_modules/msw/lib/mockServiceWorker.js)到public目录下
 
 ### inject中soucemap的问题
 

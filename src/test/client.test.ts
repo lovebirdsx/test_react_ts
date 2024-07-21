@@ -1,4 +1,4 @@
-import { client } from "../api/client";
+import { client } from '../api/client';
 
 function sum(a: number, b: number): number {
   return a + b;

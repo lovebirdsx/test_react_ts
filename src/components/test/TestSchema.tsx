@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography } from '@mui/material';
 
 // 测试props中带有parent信息的情况
 
@@ -17,9 +17,7 @@ function Any<T, TParent>(props: Props<T, TParent>) {
   const { index, value, schema, parent } = props;
   const { fileds } = schema;
   if (!fileds) {
-    return (
-      <Typography>{`${index} = ${value} parent=${parent?.index}`}</Typography>
-    );
+    return <Typography>{`${index} = ${value} parent=${parent?.index}`}</Typography>;
   }
 
   return (
@@ -28,13 +26,7 @@ function Any<T, TParent>(props: Props<T, TParent>) {
       <Box marginLeft={2}>
         {Object.entries(fileds).map(([key, v]) => {
           return (
-            <Any
-              key={key}
-              index={key}
-              value={value[key as keyof T]}
-              schema={fileds[key as keyof T]}
-              parent={props}
-            />
+            <Any key={key} index={key} value={value[key as keyof T]} schema={fileds[key as keyof T]} parent={props} />
           );
         })}
       </Box>
@@ -65,9 +57,9 @@ const classSchema: Schema<Class> = {
 };
 
 const classData: Class = {
-  name: "class1",
+  name: 'class1',
   student: {
-    name: "student1",
+    name: 'student1',
     age: 10,
   },
 };

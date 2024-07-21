@@ -1,13 +1,13 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
-import { useAppSelector, useAppDispatch } from "../../app/hook";
-import { selectPostById, postUpdated } from "./postSlice";
+import { Box, Button, TextField, Typography } from '@mui/material';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useAppSelector, useAppDispatch } from '../../app/hook';
+import { selectPostById, postUpdated } from './postSlice';
 
 export function EditPostForm() {
   const { postId } = useParams<{ postId: string }>();
   if (!postId) {
-    throw new Error("postId is required");
+    throw new Error('postId is required');
   }
 
   const dispath = useAppDispatch();
@@ -55,11 +55,7 @@ export function EditPostForm() {
           />
         </Box>
         <Box py={2}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={onSavePostClicked}
-          >
+          <Button variant="contained" color="primary" onClick={onSavePostClicked}>
             Save Post
           </Button>
         </Box>
