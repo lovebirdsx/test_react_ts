@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ThemeProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
+import { ConfirmProvider } from 'material-ui-confirm';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import theme from './theme';
@@ -21,7 +22,14 @@ async function main() {
     <ThemeProvider theme={theme}>
       <React.StrictMode>
         <CssBaseline />
-        <App />
+        <ConfirmProvider
+          defaultOptions={{
+            confirmationText: '确认',
+            cancellationText: '取消',
+          }}
+        >
+          <App />
+        </ConfirmProvider>
       </React.StrictMode>
     </ThemeProvider>,
   );

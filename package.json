@@ -21,6 +21,7 @@
     "date-fns": "^3.6.0",
     "immer": "^10.0.2",
     "inversify": "^6.0.2",
+    "material-ui-confirm": "^3.0.16",
     "mock-socket": "^9.2.1",
     "msw": "^1.2.3",
     "react": "^18.2.0",
