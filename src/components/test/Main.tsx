@@ -13,6 +13,7 @@ import { TestFunctionComponent } from './TestFunctionComponent';
 import { TestSchema } from './TestSchema';
 import { TestSetState } from './TestSetState';
 import { TestDecorator } from './TestDecorator';
+import { TestInput } from './TestInput';
 
 function registerAllTests() {
   const manager = container.resolve(ReactTestManager);
@@ -27,6 +28,7 @@ function registerAllTests() {
   manager.registerTest('TestSchema', () => <TestSchema />);
   manager.registerTest('TestSetState', () => <TestSetState />);
   manager.registerTest('TestDecorator', () => <TestDecorator />);
+  manager.registerTest('TestInput', () => <TestInput />);
 }
 
 function renderTestTitle(props: { name: string; select: boolean; onClick: () => void }) {
