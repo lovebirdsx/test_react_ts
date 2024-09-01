@@ -15,6 +15,7 @@ import { TestSetState } from './TestSetState';
 import { TestDecorator } from './TestDecorator';
 import { TestInput } from './TestInput';
 import { TestMultiEdit } from './TestMultiEdit';
+import { TestArray } from './TestArray';
 
 function registerAllTests() {
   const manager = container.resolve(ReactTestManager);
@@ -31,6 +32,7 @@ function registerAllTests() {
   manager.registerTest('TestDecorator', () => <TestDecorator />);
   manager.registerTest('TestInput', () => <TestInput />);
   manager.registerTest('TestMultiEdit', () => <TestMultiEdit />);
+  manager.registerTest('TestArray', () => <TestArray />);
 }
 
 function renderTestTitle(props: { name: string; select: boolean; onClick: () => void }) {
