@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface TestArrayProps {
   hobbies: string[];
@@ -9,6 +9,9 @@ function Array(props: TestArrayProps) {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number; index: number } | null>(null);
   const [copiedHobby, setCopiedHobby] = useState<string | null>(null);
+  const [selectedHobbyIndex, setSelectedHobbyIndex] = useState<number | null>(null);
+
+  const itemRefs = useRef<HTMLDivElement[]>([]);
 
   const handleDragStart = (index: number) => {
     setDraggedIndex(index);
@@ -44,13 +47,18 @@ function Array(props: TestArrayProps) {
       const updatedHobbies = [...props.hobbies];
       updatedHobbies.splice(contextMenu.index, 0, copiedHobby);
       props.onModify(updatedHobbies);
-      setCopiedHobby(null); // Optionally clear the clipboard after pasting
+      setCopiedHobby(null);
       setContextMenu(null);
     }
   };
 
   const handleCloseContextMenu = () => {
     setContextMenu(null);
+  };
+
+  const handleSelectHobby = (index: number) => {
+    setSelectedHobbyIndex(index);
+    itemRefs.current[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
   // Close the context menu when clicking outside
@@ -67,14 +75,30 @@ function Array(props: TestArrayProps) {
       {props.hobbies.map((hobby, idx) => (
         <div
           key={idx}
+          ref={(el) => {
+            itemRefs.current[idx] = el!;
+          }}
           draggable
           onDragStart={() => handleDragStart(idx)}
           onDragOver={(e) => e.preventDefault()} // Required to allow drop
           onDrop={() => handleDrop(idx)}
           onContextMenu={(e) => handleContextMenu(e, idx)}
-          style={{ padding: '8px', border: '1px solid #ccc', margin: '4px 0', cursor: 'pointer' }}
+          style={{
+            padding: '8px',
+            border: '1px solid #ccc',
+            margin: '4px 0',
+            cursor: 'pointer',
+            backgroundColor: selectedHobbyIndex === idx ? '#e0f7fa' : 'white',
+            position: 'relative',
+          }}
         >
           {hobby}
+          <button
+            onClick={() => handleSelectHobby(idx)}
+            style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}
+          >
+            跳转
+          </button>
         </div>
       ))}
 
