@@ -1,5 +1,6 @@
 import { produce } from 'immer';
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, memo, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { AppContext } from '../../app/context';
 
 export type ToInterface<T> = {
   [K in keyof T]: T[K];
@@ -106,90 +107,153 @@ export function Input(props: InputProps) {
   return <input ref={ref} defaultValue={value} {...rest} />;
 }
 
-function SchemaRender<T extends Obj>(props: IProps<T>) {
-  const { value, parent } = props;
-  const context = useContext(Context);
-  const { selectedPaths, clearSelectedPaths, addSelectedPath, removeSelectedPath, modifyValue } = context;
+// 获得时间，形式为：小时:分钟:秒
+function now() {
+  const date = new Date();
+  return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+}
 
-  const keys = Object.keys(value).filter((key) => isString(key));
-  return (
-    <div>
-      {keys.map((key) => {
-        const path = parent ? `${props.path}.${key}` : key;
-        const isSelected = selectedPaths.includes(path);
-        const filedValue = value[key as keyof T];
+const config = {
+  useDeepEqual: true,
+};
 
-        if (!isObject(filedValue)) {
+function getConfig(key: keyof typeof config) {
+  return config[key];
+}
+
+function setConfig<T extends keyof typeof config>(key: T, value: (typeof config)[T]) {
+  config[key] = value;
+}
+
+function deepEqual(a: any, b: any): boolean {
+  if (a === b) {
+    return true;
+  }
+
+  if (typeof a !== 'object' || typeof b !== 'object') {
+    return false;
+  }
+
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+
+  if (keysA.length !== keysB.length) {
+    return false;
+  }
+
+  for (const key of keysA) {
+    if (!deepEqual(a[key], b[key])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+const SchemaRender = memo(
+  <T extends Obj>(props: IProps<T>) => {
+    const { value, parent } = props;
+    const context = useContext(Context);
+    const { selectedPaths, clearSelectedPaths, addSelectedPath, removeSelectedPath, modifyValue } = context;
+
+    const keys = Object.keys(value).filter((key) => isString(key));
+    console.log(now(), 'SchemaRender for', props.path);
+
+    return (
+      <div>
+        {keys.map((key) => {
+          const path = parent ? `${props.path}.${key}` : key;
+          const isSelected = selectedPaths.includes(path);
+          const filedValue = value[key as keyof T];
+
+          if (!isObject(filedValue)) {
+            return (
+              <div
+                key={key}
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') {
+                    clearSelectedPaths();
+                    e.stopPropagation();
+                  }
+                }}
+                onClick={(e) => {
+                  if (!e.altKey) {
+                    e.stopPropagation();
+                    return;
+                  }
+
+                  if (isSelected) {
+                    removeSelectedPath(path);
+                  } else {
+                    addSelectedPath(path, true);
+                  }
+                }}
+                style={{ backgroundColor: isSelected ? '#e0e0e0' : 'white', marginLeft: props.path ? 20 : 0 }}
+              >
+                {key}: <Input value={filedValue as string} onChange={(e) => modifyValue(path, e.target.value)} />
+              </div>
+            );
+          }
+
           return (
-            <div
-              key={key}
-              onKeyDown={(e) => {
-                if (e.key === 'Escape') {
-                  clearSelectedPaths();
-                  e.stopPropagation();
-                }
-              }}
-              onClick={(e) => {
-                if (!e.altKey) {
-                  e.stopPropagation();
-                  return;
-                }
-
-                if (isSelected) {
-                  removeSelectedPath(path);
-                } else {
-                  addSelectedPath(path, true);
-                }
-              }}
-              style={{ backgroundColor: isSelected ? '#e0e0e0' : 'white', marginLeft: props.path ? 20 : 0 }}
-            >
-              {key}: <Input value={filedValue as string} onChange={(e) => modifyValue(path, e.target.value)} />
+            <div key={key} style={{ marginLeft: props.path ? 20 : 0 }}>
+              {key} :<SchemaRender key={key} value={filedValue} path={path} parent={props} />
             </div>
           );
-        }
-
-        return (
-          <div key={key} style={{ marginLeft: props.path ? 20 : 0 }}>
-            {key} :<SchemaRender key={key} value={filedValue} path={path} parent={props} />
-          </div>
-        );
-      })}
-    </div>
-  );
-}
+        })}
+      </div>
+    );
+  },
+  (prev, next) => {
+    const result = getConfig('useDeepEqual') ? deepEqual(prev.value, next.value) : prev.value === next.value;
+    console.log(now(), 'compare', prev.path, result);
+    return result;
+  },
+);
 
 function Editor() {
   const [selectedPaths, setSelectedPaths] = useState<string[]>([]);
+  const [, setState] = useState(1);
 
-  const clearSelectedPaths = () => {
+  const clearSelectedPaths = useCallback(() => {
+    if (selectedPaths.length === 0) {
+      return;
+    }
+
     setSelectedPaths([]);
-  };
+  }, [selectedPaths]);
 
-  const addSelectedPath = (path: string) => {
-    setSelectedPaths([...selectedPaths, path]);
-  };
+  const addSelectedPath = useCallback(
+    (path: string) => {
+      setSelectedPaths([...selectedPaths, path]);
+    },
+    [selectedPaths],
+  );
 
-  const removeSelectedPath = (path: string) => {
+  const removeSelectedPath = useCallback((path: string) => {
     setSelectedPaths((prev) => {
       return prev.filter((p) => p !== path);
     });
-  };
+  }, []);
 
   const [value, setValue] = useState<IEditorObject>(objToInterface(new EditorObject()));
-  const modifyValue = (path: string, value: any) => {
-    setValue((prev) => {
-      const newValue = produce(prev, (draft) => {
-        if (selectedPaths.includes(path)) {
-          selectedPaths.forEach((p) => {
-            setValueByPath(draft, p, value);
-          });
-        } else {
-          setValueByPath(draft, path, value);
-        }
+  const modifyValue = useCallback(
+    (path: string, value: any) => {
+      setValue((prev) => {
+        const newValue = produce(prev, (draft) => {
+          if (selectedPaths.includes(path)) {
+            selectedPaths.forEach((p) => {
+              setValueByPath(draft, p, value);
+            });
+          } else {
+            setValueByPath(draft, path, value);
+          }
+        });
+        return newValue;
       });
-      return newValue;
-    });
-  };
+    },
+    [selectedPaths],
+  );
 
   return (
     <div
@@ -201,19 +265,37 @@ function Editor() {
     >
       <div>
         <div>selectedPaths: {selectedPaths.join(', ')}</div>
+        <div>
+          useDeepEqual
+          <input
+            type="checkbox"
+            checked={getConfig('useDeepEqual')}
+            onChange={(e) => {
+              setConfig('useDeepEqual', e.target.checked);
+              setState((prev) => prev + 1);
+            }}
+          />
+        </div>
       </div>
       <Context.Provider value={{ selectedPaths, clearSelectedPaths, removeSelectedPath, addSelectedPath, modifyValue }}>
-        <div>
-          <SchemaRender value={value} path="" />
-        </div>
+        <SchemaRender value={value} path="" />
       </Context.Provider>
     </div>
   );
 }
 
 function SchemaBasedMultiEditor() {
+  const appContext = useContext(AppContext);
   return (
     <div>
+      <div>
+        useStrictMode
+        <input
+          type="checkbox"
+          checked={appContext.config.useStrictMode}
+          onChange={(e) => appContext.setConfig('useStrictMode', e.target.checked)}
+        />
+      </div>
       <Editor />
     </div>
   );
