@@ -1,10 +1,31 @@
 import { produce } from 'immer';
-import { createContext, memo, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { memo, useContext, useEffect, useRef, useState } from 'react';
+import { create } from 'zustand';
 import { AppContext } from '../../app/context';
 
 export type ToInterface<T> = {
   [K in keyof T]: T[K];
 };
+
+class BaseInfoComponent {
+  catogory = 'unknown';
+}
+
+class StateComponent {
+  state = 1;
+}
+
+class Components {
+  baseInfo = new BaseInfoComponent();
+  state = new StateComponent();
+}
+
+class EditorObject {
+  name = 'unknown';
+  components = new Components();
+}
+
+type IEditorObject = ToInterface<EditorObject>;
 
 class Obj {}
 
@@ -43,40 +64,52 @@ export function setValueByPath(obj: any, path: string, value: any): void {
   target[paths[paths.length - 1]] = value;
 }
 
-interface IContext {
+interface EditorState {
+  value: IEditorObject;
   selectedPaths: string[];
+}
+
+interface EditorActions {
   clearSelectedPaths: () => void;
-  addSelectedPath: (path: string, isCurrent: boolean) => void;
+  addSelectedPath: (path: string) => void;
   removeSelectedPath: (path: string) => void;
+  setValue: (value: IEditorObject) => void;
   modifyValue: (path: string, value: any) => void;
 }
-const Context = createContext<IContext>(undefined!);
+
+const useEditorStore = create<EditorState & EditorActions>((set) => ({
+  selectedPaths: [],
+  value: objToInterface(new EditorObject()),
+  setValue: (value) => set({ value }),
+  clearSelectedPaths: () =>
+    set((state) => {
+      if (state.selectedPaths.length > 0) {
+        return { selectedPaths: [] };
+      }
+      return state;
+    }),
+  addSelectedPath: (path) => set((state) => ({ selectedPaths: [...state.selectedPaths, path] })),
+  removeSelectedPath: (path) => set((state) => ({ selectedPaths: state.selectedPaths.filter((p) => p !== path) })),
+  modifyValue: (path, value) =>
+    set((state) => {
+      const newValue = produce(state.value, (draft) => {
+        if (state.selectedPaths.includes(path)) {
+          state.selectedPaths.forEach((p) => {
+            setValueByPath(draft, p, value);
+          });
+        } else {
+          setValueByPath(draft, path, value);
+        }
+      });
+      return { value: newValue };
+    }),
+}));
 
 interface IProps<T> {
   value: T;
   path: string;
   parent?: IProps<unknown>;
 }
-
-class BaseInfoComponent {
-  catogory = 'unknown';
-}
-
-class StateComponent {
-  state = 1;
-}
-
-class Components {
-  baseInfo = new BaseInfoComponent();
-  state = new StateComponent();
-}
-
-class EditorObject {
-  name = 'unknown';
-  components = new Components();
-}
-
-type IEditorObject = ToInterface<EditorObject>;
 
 function isString(value: any): value is string {
   return typeof value === 'string';
@@ -113,48 +146,14 @@ function now() {
   return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 }
 
-const config = {
-  useDeepEqual: true,
-};
-
-function getConfig(key: keyof typeof config) {
-  return config[key];
-}
-
-function setConfig<T extends keyof typeof config>(key: T, value: (typeof config)[T]) {
-  config[key] = value;
-}
-
-function deepEqual(a: any, b: any): boolean {
-  if (a === b) {
-    return true;
-  }
-
-  if (typeof a !== 'object' || typeof b !== 'object') {
-    return false;
-  }
-
-  const keysA = Object.keys(a);
-  const keysB = Object.keys(b);
-
-  if (keysA.length !== keysB.length) {
-    return false;
-  }
-
-  for (const key of keysA) {
-    if (!deepEqual(a[key], b[key])) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
 const SchemaRender = memo(
   <T extends Obj>(props: IProps<T>) => {
     const { value, parent } = props;
-    const context = useContext(Context);
-    const { selectedPaths, clearSelectedPaths, addSelectedPath, removeSelectedPath, modifyValue } = context;
+    const selectedPaths = useEditorStore((state) => state.selectedPaths);
+    const clearSelectedPaths = useEditorStore((state) => state.clearSelectedPaths);
+    const addSelectedPath = useEditorStore((state) => state.addSelectedPath);
+    const removeSelectedPath = useEditorStore((state) => state.removeSelectedPath);
+    const modifyValue = useEditorStore((state) => state.modifyValue);
 
     const keys = Object.keys(value).filter((key) => isString(key));
     console.log(now(), 'SchemaRender for', props.path);
@@ -185,7 +184,7 @@ const SchemaRender = memo(
                   if (isSelected) {
                     removeSelectedPath(path);
                   } else {
-                    addSelectedPath(path, true);
+                    addSelectedPath(path);
                   }
                 }}
                 style={{ backgroundColor: isSelected ? '#e0e0e0' : 'white', marginLeft: props.path ? 20 : 0 }}
@@ -205,56 +204,12 @@ const SchemaRender = memo(
     );
   },
   (prev, next) => {
-    const result = getConfig('useDeepEqual') ? deepEqual(prev.value, next.value) : prev.value === next.value;
-    console.log(now(), 'compare', prev.path, result);
-    return result;
+    return prev.value === next.value;
   },
 );
 
 function Editor() {
-  const [selectedPaths, setSelectedPaths] = useState<string[]>([]);
-  const [, setState] = useState(1);
-
-  const clearSelectedPaths = useCallback(() => {
-    if (selectedPaths.length === 0) {
-      return;
-    }
-
-    setSelectedPaths([]);
-  }, [selectedPaths]);
-
-  const addSelectedPath = useCallback(
-    (path: string) => {
-      setSelectedPaths([...selectedPaths, path]);
-    },
-    [selectedPaths],
-  );
-
-  const removeSelectedPath = useCallback((path: string) => {
-    setSelectedPaths((prev) => {
-      return prev.filter((p) => p !== path);
-    });
-  }, []);
-
-  const [value, setValue] = useState<IEditorObject>(objToInterface(new EditorObject()));
-  const modifyValue = useCallback(
-    (path: string, value: any) => {
-      setValue((prev) => {
-        const newValue = produce(prev, (draft) => {
-          if (selectedPaths.includes(path)) {
-            selectedPaths.forEach((p) => {
-              setValueByPath(draft, p, value);
-            });
-          } else {
-            setValueByPath(draft, path, value);
-          }
-        });
-        return newValue;
-      });
-    },
-    [selectedPaths],
-  );
-
+  const { value, selectedPaths, clearSelectedPaths } = useEditorStore();
   return (
     <div
       onClick={(e) => {
@@ -265,21 +220,8 @@ function Editor() {
     >
       <div>
         <div>selectedPaths: {selectedPaths.join(', ')}</div>
-        <div>
-          useDeepEqual
-          <input
-            type="checkbox"
-            checked={getConfig('useDeepEqual')}
-            onChange={(e) => {
-              setConfig('useDeepEqual', e.target.checked);
-              setState((prev) => prev + 1);
-            }}
-          />
-        </div>
       </div>
-      <Context.Provider value={{ selectedPaths, clearSelectedPaths, removeSelectedPath, addSelectedPath, modifyValue }}>
-        <SchemaRender value={value} path="" />
-      </Context.Provider>
+      <SchemaRender value={value} path="" />
     </div>
   );
 }
