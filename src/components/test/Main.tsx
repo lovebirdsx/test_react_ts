@@ -16,6 +16,8 @@ import { TestDecorator } from './TestDecorator';
 import { TestInput } from './TestInput';
 import { TestMultiEdit } from './TestMultiEdit';
 import { TestArray } from './TestArray';
+import { TestContextMenu } from './TestContextMenu';
+import { TestClassProps } from './TestClassProps';
 
 function registerAllTests() {
   const manager = container.resolve(ReactTestManager);
@@ -32,6 +34,8 @@ function registerAllTests() {
   manager.registerTest('TestDecorator', () => <TestDecorator />);
   manager.registerTest('TestInput', () => <TestInput />);
   manager.registerTest('TestMultiEdit', () => <TestMultiEdit />);
+  manager.registerTest('TestContextMenu', () => <TestContextMenu />);
+  manager.registerTest('TestClassProps', () => <TestClassProps />);
   manager.registerTest('TestArray', () => <TestArray />);
 }
 
