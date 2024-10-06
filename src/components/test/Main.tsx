@@ -18,6 +18,7 @@ import { TestMultiEdit } from './TestMultiEdit';
 import { TestArray } from './TestArray';
 import { TestContextMenu } from './TestContextMenu';
 import { TestClassProps } from './TestClassProps';
+import { TestJsonPath } from './TestJsonPath';
 
 function registerAllTests() {
   const manager = container.resolve(ReactTestManager);
@@ -37,6 +38,7 @@ function registerAllTests() {
   manager.registerTest('TestContextMenu', () => <TestContextMenu />);
   manager.registerTest('TestClassProps', () => <TestClassProps />);
   manager.registerTest('TestArray', () => <TestArray />);
+  manager.registerTest('TestJsonPath', () => <TestJsonPath />);
 }
 
 function renderTestTitle(props: { name: string; select: boolean; onClick: () => void }) {
