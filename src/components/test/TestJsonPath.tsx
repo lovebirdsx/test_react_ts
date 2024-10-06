@@ -1,30 +1,8 @@
 import { create, StateCreator } from 'zustand';
 import { produce } from 'immer';
-import { useEffect, useState } from 'react';
-import * as React from 'react';
+import React from 'react';
 
-type Event<T> = (listener: (e: T) => any) => () => void;
-
-class Emitter<T> {
-  private listeners: Array<(e: T) => any> = [];
-
-  event: Event<T> = (listener: (e: T) => any) => {
-    this.listeners.push(listener);
-    return () => {
-      const index = this.listeners.indexOf(listener);
-      if (index >= 0) {
-        this.listeners.splice(index, 1);
-      }
-    };
-  };
-
-  fire(eventData: T): void {
-    for (const listener of this.listeners) {
-      listener(eventData);
-    }
-  }
-}
-
+// Utility functions for JSON path manipulation
 export function jsonPathToString(jsonPath: string[]): string {
   return jsonPath.join('.');
 }
@@ -33,17 +11,11 @@ export function stringToJsonPath(str: string): string[] {
   if (!str) {
     return [];
   }
-
   return str.split('.');
 }
 
 export function getValueByJsonPath(obj: any, jsonPath: string[]): any {
-  let value: any = obj;
-  for (const p of jsonPath) {
-    value = value[p];
-  }
-
-  return value;
+  return jsonPath.reduce((acc, key) => (acc ? acc[key] : undefined), obj);
 }
 
 export function setValueByJsonPath(obj: any, jsonPath: string[], value: any): void {
@@ -55,6 +27,9 @@ export function setValueByJsonPath(obj: any, jsonPath: string[], value: any): vo
 
   let target: any = obj;
   for (let i = 0; i < jsonPath.length - 1; i++) {
+    if (!target[jsonPath[i]]) {
+      target[jsonPath[i]] = {};
+    }
     target = target[jsonPath[i]];
   }
 
@@ -62,110 +37,171 @@ export function setValueByJsonPath(obj: any, jsonPath: string[], value: any): vo
 }
 
 export function addFieldToJsonPathString(jsonPath: string, field: string): string {
-  if (!jsonPath) {
-    return field;
-  }
-
-  return `${jsonPath}.${field}`;
+  return jsonPath ? `${jsonPath}.${field}` : field;
 }
 
+interface IMeta {
+  type: 'object' | 'string' | 'number' | 'boolean' | 'undefined' | 'bigint' | 'symbol' | 'function';
+  fields?: string[];
+}
+
+// Define the shape of the state slice
 export interface ObjectSlice {
   object: {
-    data: unknown;
+    data: Record<string, any>;
+    valueByJsonPath: Record<string, any>;
+    metaByJsonPath: Record<string, IMeta>;
 
-    setByJsonPath(jsonPathStr: string, data: unknown): void;
-    getByJsonPath(jsonPathStr: string): unknown;
-    onSetByJsonPath: Event<{ jsonPathStr: string; data: unknown }>;
+    /**
+     * 设定data中的某个字段的值
+     * @param jsonPathStr 字段的json path
+     * @param data 新的值
+     */
+    setByJsonPath: (jsonPathStr: string, data: any) => void;
   };
 }
 
-export const createObjectSlice: StateCreator<ObjectSlice> = (setApi, getApi) => {
-  const onSetByJsonPathEmmiter = new Emitter<{ jsonPathStr: string; data: unknown }>();
+function createValueAndMetaByJsonPath(data: Record<string, any>): {
+  valueByJsonPath: Record<string, any>;
+  metaByJsonPath: Record<string, IMeta>;
+} {
+  const valueByJsonPath: Record<string, any> = {};
+  const metaByJsonPath: Record<string, IMeta> = {};
 
-  const setByJsonPath = (jsonPathStr: string, data: unknown) => {
-    setApi((state) => {
-      const nextState = produce(state, (draft) => {
-        const jsonPath = stringToJsonPath(jsonPathStr);
-        setValueByJsonPath(draft.object.data, jsonPath, data);
-      });
+  function createValueByJsonPathRecursive(obj: any, jsonPath: string[]) {
+    if (typeof obj !== 'object') {
+      return;
+    }
 
-      onSetByJsonPathEmmiter.fire({ jsonPathStr, data });
-      return nextState;
+    const objJsonPathStr = jsonPathToString(jsonPath);
+    if (obj === null) {
+      metaByJsonPath[objJsonPathStr] = {
+        type: 'object',
+        fields: [],
+      };
+      return;
+    }
+
+    metaByJsonPath[objJsonPathStr] = {
+      type: 'object',
+      fields: Object.keys(obj),
+    };
+
+    Object.keys(obj).forEach((key) => {
+      const jsonPathStr = jsonPathToString([...jsonPath, key]);
+      const fieldVal = obj[key];
+      if (typeof fieldVal === 'object') {
+        createValueByJsonPathRecursive(fieldVal, [...jsonPath, key]);
+      } else {
+        valueByJsonPath[jsonPathStr] = fieldVal;
+        metaByJsonPath[jsonPathStr] = {
+          type: typeof fieldVal,
+        };
+      }
     });
-  };
+  }
 
-  const getByJsonPath = (jsonPathStr: string) => {
-    const jsonPath = stringToJsonPath(jsonPathStr);
-    return getValueByJsonPath(getApi().object.data, jsonPath);
-  };
+  createValueByJsonPathRecursive(data, []);
 
-  const onSetByJsonPath = onSetByJsonPathEmmiter.event;
+  return { valueByJsonPath, metaByJsonPath };
+}
+
+// Create the object slice with Zustand and Immer
+export const createObjectSlice: StateCreator<ObjectSlice> = (set, get) => {
+  const data = {
+    foo: {
+      id: '123',
+      name: 'baz',
+    },
+    bar: 1,
+  };
 
   return {
     object: {
-      data: {
-        foo: {
-          id: '123',
-          name: 'baz',
-        },
-        bar: 1,
-      },
+      data,
+      ...createValueAndMetaByJsonPath(data),
+      setByJsonPath: (jsonPathStr, newData) =>
+        set(
+          produce((state: ObjectSlice) => {
+            const jsonPath = stringToJsonPath(jsonPathStr);
+            setValueByJsonPath(state.object.data, jsonPath, newData);
 
-      setByJsonPath,
-      getByJsonPath,
-      onSetByJsonPath,
+            // Function to update valueByJsonPath and metaByJsonPath for a subtree
+            function updateValueAndMeta(subData: unknown, subPath: string[]) {
+              if (typeof subData !== 'object' || subData === null) {
+                const fullPath = jsonPathToString(subPath);
+                state.object.valueByJsonPath[fullPath] = subData;
+                return;
+              }
+
+              const { valueByJsonPath, metaByJsonPath } = createValueAndMetaByJsonPath(subData);
+              const prefix = jsonPathToString(subPath);
+
+              Object.entries(valueByJsonPath).forEach(([key, value]) => {
+                const fullPath = prefix ? `${prefix}.${key}` : key;
+                state.object.valueByJsonPath[fullPath] = value;
+              });
+
+              Object.entries(metaByJsonPath).forEach(([key, meta]) => {
+                const fullPath = prefix ? `${prefix}.${key}` : key;
+                state.object.metaByJsonPath[fullPath] = meta;
+              });
+            }
+
+            updateValueAndMeta(newData, jsonPath);
+          }),
+        ),
     },
   };
 };
 
-export const useEditorStore = create<ObjectSlice>((set, get, api) => {
-  const initialState = {
-    ...createObjectSlice(set, get, api),
-  };
+// Create the Zustand store
+export const useEditorStore = create<ObjectSlice>((set, get, api) => ({
+  ...createObjectSlice(set, get, api),
+}));
 
-  return initialState;
-});
-
+// Props for the DataNode component
 interface DataNodeProps {
   jsonPathString: string;
 }
 
-const DataNode: React.FC<DataNodeProps> = ({ jsonPathString }) => {
-  const getByJsonValue = useEditorStore((state) => state.object.getByJsonPath);
-  const setByJsonValue = useEditorStore((state) => state.object.setByJsonPath);
-  const onSetByJsonPath = useEditorStore((state) => state.object.onSetByJsonPath);
+const String: React.FC<{ jsonPathString: string }> = ({ jsonPathString }) => {
+  const myValue = useEditorStore((state) => state.object.valueByJsonPath[jsonPathString]);
+  const setByJsonPath = useEditorStore((state) => state.object.setByJsonPath);
 
-  const [myValue, setMyValue] = useState(getByJsonValue(jsonPathString));
+  return (
+    <input
+      value={myValue}
+      onChange={(e) => {
+        setByJsonPath(jsonPathString, e.target.value);
+      }}
+    />
+  );
+};
 
-  useEffect(() => {
-    return onSetByJsonPath((e) => {
-      if (e.jsonPathStr === jsonPathString) {
-        setMyValue(e.data as object);
-      }
-    });
-  }, [jsonPathString, onSetByJsonPath]);
+const Unkown: React.FC<{ jsonPathString: string }> = ({ jsonPathString }) => {
+  const myValue = useEditorStore((state) => state.object.valueByJsonPath[jsonPathString]);
+  return <div>{JSON.stringify(myValue)}</div>;
+};
 
-  if (typeof myValue === 'string') {
-    return (
-      <input
-        value={myValue}
-        onChange={(e) => {
-          setByJsonValue(jsonPathString, e.target.value);
-        }}
-      />
-    );
+// DataNode component optimized with selectors
+const DataNode: React.FC<DataNodeProps> = React.memo(({ jsonPathString }) => {
+  const meta = useEditorStore((state) => state.object.metaByJsonPath[jsonPathString]);
+
+  if (meta.type === 'string') {
+    return <String jsonPathString={jsonPathString} />;
   }
 
-  if (myValue === undefined || myValue === null) {
+  if (meta.type === 'undefined') {
     return <div>undefined</div>;
   }
 
-  if (typeof myValue === 'object') {
+  if (meta.type === 'object') {
     return (
       <div>
-        {Object.keys(myValue).map((key) => (
-          <div style={{ marginLeft: jsonPathString ? 20 : 0 }} key={key}>
-            <span style={{ minWidth: 100, display: 'inline-block' }}>{key}</span>
+        {meta.fields!.map((key) => (
+          <div key={key} style={{ marginLeft: jsonPathString ? 20 : 0 }}>
+            <span style={{ minWidth: 100, display: 'inline-block' }}>{key}:</span>
             <DataNode jsonPathString={addFieldToJsonPathString(jsonPathString, key)} />
           </div>
         ))}
@@ -173,25 +209,36 @@ const DataNode: React.FC<DataNodeProps> = ({ jsonPathString }) => {
     );
   }
 
-  return <div>{JSON.stringify(myValue)}</div>;
-};
+  return <Unkown jsonPathString={jsonPathString} />;
+});
 
-const OriginJsonString: React.FC = () => {
+// Component to display the original JSON string
+const OriginJsonString: React.FC = React.memo(() => {
   const data = useEditorStore((state) => state.object.data);
-  return <div>{JSON.stringify(data, null, 2)}</div>;
-};
-
-export const TestJsonPath: React.FC = () => {
   return (
-    <div>
-      <div>
-        <h3>Origin Json String</h3>
-      </div>
+    <pre
+      style={{
+        background: '#f0f0f0',
+        padding: '10px',
+        borderRadius: '4px',
+        overflowX: 'auto',
+      }}
+    >
+      {JSON.stringify(data, null, 2)}
+    </pre>
+  );
+});
+
+// Main component combining OriginJsonString and DataNode
+export const TestJsonPath: React.FC = () => (
+  <div style={{ display: 'flex', gap: '20px' }}>
+    <div style={{ flex: 1 }}>
+      <h3>Origin JSON String</h3>
       <OriginJsonString />
-      <div>
-        <h3>Editor</h3>
-      </div>
+    </div>
+    <div style={{ flex: 1 }}>
+      <h3>Editor</h3>
       <DataNode jsonPathString="" />
     </div>
-  );
-};
+  </div>
+);
