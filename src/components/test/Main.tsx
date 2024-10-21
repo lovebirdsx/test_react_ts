@@ -1,5 +1,5 @@
 import { Box, FormControlLabel, Grid, Radio, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import container from '../../inversify.config';
 import { ReactTestManager } from '../../common/test/ReactTestManager';
 import { GraphEditor } from './GraphEditor';
@@ -57,7 +57,12 @@ function renderTestTitle(props: { name: string; select: boolean; onClick: () => 
 
 export function TestMain() {
   const manager = container.resolve(ReactTestManager);
-  const [select, setSelect] = useState(0);
+  const initialTestId = parseInt(localStorage.getItem('testId') || '0', 10);
+  const [testId, setTestId] = useState(initialTestId);
+
+  useEffect(() => {
+    localStorage.setItem('testId', testId.toString());
+  }, [testId]);
 
   return (
     <Box p={2}>
@@ -67,12 +72,14 @@ export function TestMain() {
           {manager.tests.map((e, idx) =>
             renderTestTitle({
               name: e.name,
-              select: idx === select,
-              onClick: () => setSelect(idx),
+              select: idx === testId,
+              onClick: () => {
+                setTestId(idx);
+              },
             }),
           )}
         </Grid>
-        <Box p={2}>{manager.tests[select].render()}</Box>
+        <Box p={2}>{manager.tests[testId].render()}</Box>
       </Box>
     </Box>
   );
