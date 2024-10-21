@@ -56,17 +56,17 @@
 	border-radius: 4px;
 }
 
-.List {
+.vsplay-list {
   border: 1px solid #d9dddd;
 }
 
-.ListItemEven,
-.ListItemOdd {
+.vsplay-list-even,
+.vsplay-list-odd {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.ListItemEven {
-  background-color: #f8f8f0;
+.vsplay-list-even {
+  background-color: #f0f2f8;
 }
