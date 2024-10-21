@@ -21,6 +21,8 @@ import { TestClassProps } from './TestClassProps';
 import { TestJsonPath } from './TestJsonPath';
 import { TestReactSelect } from './TestReactSelect';
 import { TestPeekComponent } from './TestPeekComponent';
+import { TestSelect } from './TestSelect';
+import { TestReactWindow } from './TestReactWindow';
 
 function registerAllTests() {
   const manager = container.resolve(ReactTestManager);
@@ -43,6 +45,8 @@ function registerAllTests() {
   manager.registerTest('TestJsonPath', () => <TestJsonPath />);
   manager.registerTest('TestReactSelect', () => <TestReactSelect />);
   manager.registerTest('TestPeekComponent', () => <TestPeekComponent />);
+  manager.registerTest('TestSelect', () => <TestSelect />);
+  manager.registerTest('TestReactWindow', () => <TestReactWindow />);
 }
 
 function renderTestTitle(props: { name: string; select: boolean; onClick: () => void }) {
