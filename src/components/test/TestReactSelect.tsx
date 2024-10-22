@@ -18,6 +18,20 @@ const options: Option[] = [
   { value: 'chocolate', label: 'Chocolate' },
   { value: 'strawberry', label: 'Strawberry' },
   { value: 'vanilla', label: 'Vanilla' },
+  { value: 'mango', label: 'Mango' },
+  { value: 'banana', label: 'Banana' },
+  { value: 'apple', label: 'Apple' },
+  { value: 'orange', label: 'Orange' },
+  { value: 'grape', label: 'Grape' },
+  { value: 'peach', label: 'Peach' },
+  { value: 'pear', label: 'Pear' },
+  { value: 'kiwi', label: 'Kiwi' },
+  { value: 'plum', label: 'Plum' },
+  { value: 'watermelon', label: 'Watermelon' },
+  { value: 'melon', label: 'Melon' },
+  { value: 'pineapple', label: 'Pineapple' },
+  { value: 'lemon', label: 'Lemon' },
+  { value: 'lime', label: 'Lime' },
 ];
 
 function Basic() {

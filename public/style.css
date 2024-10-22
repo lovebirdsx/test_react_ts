@@ -1,35 +1,49 @@
 :root {
-	/* 背景颜色 */
-	--background: #f0f0f0;
-	--foreground: #333;
-	--border-color: #ccc;
+  /* 背景颜色 */
+  --background: #1e1e1e; /* var(--vscode-editor-background) */
+  --foreground: #d4d4d4; /* var(--vscode-editor-foreground) */
+  --border-color: #3c3c3c; /* var(--vscode-editorGroup-border) */
 
-	/* 字体颜色 */
-	--primary-text-color: #333;
-	--secondary-text-color: #666;
+  /* 字体颜色 */
+  --primary-text-color: #d4d4d4; /* var(--vscode-editor-foreground) */
+  --secondary-text-color: #cccccc; /* var(--vscode-foreground) */
 
-	/* 字体大小 */
-	--font-size: 14px;
+  /* 字体大小 */
+  --font-size: 14px; /* var(--vscode-editor-font-size) */
 
-	/* 链接颜色 */
-	--link-color: #007acc;
+  /* 链接颜色 */
+  --link-color: #3794ff; /* var(--vscode-textLink-foreground) */
 
-	/* 按钮颜色 */
-	--button-background: #007acc;
-	--button-hover-background: #005f7f;
-	--button-foreground: #fff;
+  /* 按钮颜色 */
+  --button-background: #0e639c; /* var(--vscode-button-background) */
+  --button-hover-background: #1177bb; /* var(--vscode-button-hoverBackground) */
+  --button-foreground: #ffffff; /* var(--vscode-button-foreground) */
 
-	/* 输入框颜色 */
-	--input-background: #fff;
-	--input-foreground: #333;
-	--input-border: #ccc;
-	--input-focus-border: #007acc;
+  /* 输入框颜色 */
+  --input-background: #3c3c3c; /* var(--vscode-input-background) */
+  --input-foreground: #cccccc; /* var(--vscode-input-foreground) */
+  --input-border: #3c3c3c; /* var(--vscode-input-background) */
+  --input-focus-border: #007acc; /* var(--vscode-inputValidation-infoBorder) */
 
-	/* 错误相关颜色 */
-	--error-text-color: #721c24;
-	--error-backgroud-color: #f8d7da;
-	--error-backgroud-shadow-color: rgba(220, 53, 69, 0.25);
-	--error-border-color: #f5c6cb;
+  /* 列表颜色 */
+  --list-item-background: #3c3c3c; /* var(--vscode-list-focusBackground) */
+  --list-item-hover-foreground: #0e639c5e; /* var(--vscode-list-hoverForeground) */
+  --list-item-selected-foreground: #007acc; /* var(--vscode-list-activeSelectionForeground) */
+
+  /* 错误相关颜色 */
+  --error-text-color: #ffcc00; /* var(--vscode-list-warningForeground) */
+  --error-backgroud-color: #1e1e1e; /* var(--vscode-inputValidation-infoBackground) */
+  --error-backgroud-shadow-color: #007acc; /* var(--vscode-inputValidation-infoBorder) */
+  --error-border-color: #007acc; /* var(--vscode-inputValidation-infoBorder) */
+}
+
+.vsplay-body {
+	background-color: var(--background);
+	color: var(--primary-text-color);
+	margin: 0;
+	padding: 10px;
+	font-family: var(--vscode-font-family);
+	font-size: var(--font-size);
 }
 
 .test-section {
@@ -56,17 +70,157 @@
 	border-radius: 4px;
 }
 
-.vsplay-list {
-  border: 1px solid #d9dddd;
+/* 可选：隐藏滚动条轨道的空白区域（部分浏览器支持） */
+.vsplay-picklist {
+  /* 仅在支持的浏览器中生效 */
+  overflow: overlay;
 }
 
-.vsplay-list-even,
-.vsplay-list-odd {
+/* 针对Firefox的滚动条样式 */
+.vsplay-picklist {
+  scrollbar-width: thin; /* 滚动条宽度为细 */
+  scrollbar-color: var(--list-item-selected-foreground) transparent; /* 滑块颜色 和 轨道颜色 */
+}
+
+/* 针对Webkit内核的浏览器（如Chrome、Edge、Safari） */
+.vsplay-picklist::-webkit-scrollbar {
+  width: 8px; /* 滚动条宽度 */
+}
+
+.vsplay-picklist::-webkit-scrollbar-track {
+  background: transparent; /* 滚动条轨道背景 */
+}
+
+.vsplay-picklist::-webkit-scrollbar-thumb {
+  background-color: var(--list-item-selected-foreground); /* 滑块颜色 */
+  border-radius: 4px; /* 滑块圆角 */
+  transition: background-color 0.3s;
+}
+
+.vsplay-picklist::-webkit-scrollbar-thumb:hover {
+  background-color: var(--button-hover-background);
+}
+
+.vsplay-picklist-container {
+  position: relative;
+  width: 100%;
+}
+
+.vsplay-picklist-clear-button {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--input-foreground);
+  cursor: pointer;
+  padding: 0.8em;
+}
+
+.vsplay-picklist-clear-button:hover {
+  color: var(--button-hover-background);
+}
+
+.vsplay-input-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  background-color: var(--input-background);
+  border: 1px solid var(--input-border);
+  padding: 0.2em;
+  border-radius: 2px;
+  box-sizing: border-box;
+  cursor: text;
+}
+
+.vsplay-input-container:focus-within {
+  border-color: var(--input-focus-border);
+}
+
+.vsplay-input-container input {
+  flex: 1;
+  border: none;
+  padding: 0.2em;
+  background: none;
+  outline: none;
+  color: var(--input-foreground);
+}
+
+.vsplay-selected-items {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.vsplay-selected-item {
   display: flex;
   align-items: center;
-  justify-content: center;
+  background-color: var(--input-background);
+  color: var(--input-foreground);
+  border: 1px solid var(--input-border);
+  border-radius: 2px;
 }
 
-.vsplay-list-even {
-  background-color: #f0f2f8;
+.vsplay-selected-item button {
+  background: none;
+  border: none;
+  color: var(--list-item-selected-foreground);
+  cursor: pointer;
+  margin-left: 0.2em;
+}
+
+.vsplay-selected-item button:hover {
+  color: var(--listitem);
+}
+
+.vsplay-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  background-color: var(--input-background);
+  border: 1px solid var(--input-border);
+  border-top: none;
+  z-index: 1000;
+}
+
+.vsplay-list-item {
+  cursor: pointer;
+  padding: 0 0.6em;
+}
+
+.vsplay-list-item.selected {
+  background-color: var(--list-item-selected-foreground);
+}
+
+.vsplay-list-item.hovered {
+  background-color: var(--list-item-hover-foreground);
+}
+
+.loading {
+  padding: 0.4em;
+  color: var(--secondary-text-color);
+}
+
+.vsplay-no-items {
+  padding: 0.4em;
+  color: var(--secondary-text-color);
+}
+
+.vsplay-input-container button {
+  background: none;
+  border: none;
+  color: var(--input-foreground);
+  cursor: pointer;
+}
+
+.vsplay-input-container button:disabled {
+  color: var(--secondary-text-color);
+  cursor: default;
+}
+
+.vsplay-input-container button:hover:not(:disabled) {
+  color: var(--button-hover-background);
 }
