@@ -19,6 +19,7 @@
 
 在`src/components/test`目录下，有一些测试项，可以用来测试项目的一些功能：
 
+* [TestTree](src/components/test/TestTree.tsx): 树型数据的渲染效率优化
 * [TestJsonPath](src/components/test/TestJsonPath.tsx)：递归渲染如何避免父组件重复渲染
   * 测试方法
     * 安装`react-devtools`
