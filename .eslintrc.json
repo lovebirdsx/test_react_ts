@@ -67,6 +67,7 @@
     "class-methods-use-this": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-redeclare": "off",
     "max-len": "off",
     "no-await-in-loop": "off",
     "no-nested-ternary": "off",

@@ -24,6 +24,7 @@ import { TestPeekComponent } from './TestPeekComponent';
 import { TestSelect } from './TestSelect';
 import { TestReactWindow } from './TestReactWindow';
 import { TestTree } from './TestTree';
+import { TestService } from './testService/TestService';
 
 function registerAllTests() {
   const manager = container.resolve(ReactTestManager);
@@ -49,6 +50,7 @@ function registerAllTests() {
   manager.registerTest('TestSelect', () => <TestSelect />);
   manager.registerTest('TestReactWindow', () => <TestReactWindow />);
   manager.registerTest('TestTree', () => <TestTree />);
+  manager.registerTest('TestService', () => <TestService />);
 }
 
 function renderTestTitle(props: { name: string; select: boolean; onClick: () => void }) {
