@@ -3,7 +3,7 @@ import { IInstantiationService, ServicesAccessor } from './instantion';
 import { ServiceCollection, ServiceIdentifier } from './serviceCollection';
 
 export class InstantiationService implements IInstantiationService {
-  declare readonly _serviceBrand: undefined;
+  readonly _serviceBrand: undefined;
 
   constructor(private readonly services: ServiceCollection) {}
 
