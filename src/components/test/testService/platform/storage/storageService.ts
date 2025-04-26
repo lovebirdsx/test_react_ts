@@ -1,7 +1,13 @@
+import { EventEmitter } from '../../base/event';
 import { registerSingleton } from '../instantion/common/extension';
 import { IStorageService } from './storage';
 
 class StorageService implements IStorageService {
+  readonly _serviceBrand: undefined = undefined;
+
+  private readonly _onDidChange = new EventEmitter<{ section: string; key: string; value: any }>();
+  readonly onDidChange = this._onDidChange.event;
+
   private getKey(section: string, key: string): string {
     return `${section}.${key}`;
   }
@@ -30,6 +36,8 @@ class StorageService implements IStorageService {
     } catch (error) {
       console.error(`Error setting storage value for key "${storageKey}":`, error);
     }
+
+    this._onDidChange.fire({ section, key, value });
   }
 }
 

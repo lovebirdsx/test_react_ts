@@ -1,5 +1,5 @@
 import { StateCreator } from 'zustand';
-import { ServicesAccessor } from '../../../platform/instantion/common/instantion';
+import { IWorkbenchStoreOptions } from '../common';
 
 export interface SideBarIcon {
   icon: string;
@@ -16,7 +16,7 @@ export interface SideBarSlice {
 }
 
 export const createSideBarSlice =
-  (accessor: ServicesAccessor): StateCreator<SideBarSlice> =>
+  ({ accessor }: IWorkbenchStoreOptions): StateCreator<SideBarSlice> =>
   (set) => ({
     sideBar: {
       icons: [],

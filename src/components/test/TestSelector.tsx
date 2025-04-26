@@ -1,4 +1,5 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit';
+import { useState } from 'react';
 import { Provider, useSelector } from 'react-redux';
 import { create } from 'zustand';
 
@@ -157,11 +158,15 @@ function ZustandBarUser() {
 }
 
 function TestZustandSelector() {
+  const [isShowFoo, setIsShowFoo] = useState(true);
+  const [isShowBar, setIsShowBar] = useState(true);
   return (
     <div>
       <h1>Test Zustand Selector</h1>
-      <ZustandFooUser />
-      <ZustandBarUser />
+      <button onClick={() => setIsShowFoo((prev) => !prev)}>Toggle Foo</button>
+      <button onClick={() => setIsShowBar((prev) => !prev)}>Toggle Bar</button>
+      {isShowFoo && <ZustandFooUser />}
+      {isShowBar && <ZustandBarUser />}
     </div>
   );
 }
