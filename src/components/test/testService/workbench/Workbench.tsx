@@ -1,5 +1,11 @@
-import { ServicesAccessor } from '../platform/instantion/common/instantion';
+import { SiderBar } from './features/parts/siderBar';
+import { TitleBar } from './features/parts/titleBar';
 
 export function Workbench() {
-  return <div>Workbench</div>;
+  return (
+    <div>
+      <TitleBar />
+      <SiderBar />
+    </div>
+  );
 }

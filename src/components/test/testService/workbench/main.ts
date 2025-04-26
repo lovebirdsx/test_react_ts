@@ -1,4 +1,5 @@
 import '../platform/file/node/file';
+import '../platform/storage/storageService';
 
 import { ServiceCollection } from '../platform/instantion/common/serviceCollection';
 import { IInstantiationService, ServicesAccessor } from '../platform/instantion/common/instantion';

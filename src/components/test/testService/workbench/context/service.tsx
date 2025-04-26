@@ -1,6 +1,6 @@
 import React from 'react';
-import { ServicesAccessor } from '../platform/instantion/common/instantion';
-import { WorkbenchMain } from './main';
+import { ServicesAccessor } from '../../platform/instantion/common/instantion';
+import { WorkbenchMain } from '../main';
 
 const serviceContext = React.createContext<ServicesAccessor>(null!);
 const workbenchMain = new WorkbenchMain();
