@@ -24,7 +24,7 @@ import { TestPeekComponent } from './TestPeekComponent';
 import { TestSelect } from './TestSelect';
 import { TestReactWindow } from './TestReactWindow';
 import { TestTree } from './TestTree';
-import { TestService } from './testService/TestService';
+import { TestVsplay } from './testVsplay/TestService';
 import { TestSelectorEfficiency } from './TestSelector';
 
 function registerAllTests() {
@@ -51,7 +51,7 @@ function registerAllTests() {
   manager.registerTest('TestSelect', () => <TestSelect />);
   manager.registerTest('TestReactWindow', () => <TestReactWindow />);
   manager.registerTest('TestTree', () => <TestTree />);
-  manager.registerTest('TestService', () => <TestService />);
+  manager.registerTest('TestService', () => <TestVsplay />);
   manager.registerTest('TestSelectorEfficiency', () => <TestSelectorEfficiency />);
 }
 

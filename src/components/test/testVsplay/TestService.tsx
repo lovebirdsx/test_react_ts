@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { IStorageService } from './platform/storage/storage';
 import { Workbench } from './workbench/Workbench';
-import { ServiceProvider, useService } from './workbench/context/service';
-import { WorkbenchStoreProvider } from './workbench/context/store';
+import { ServiceProvider, useService } from './workbench/context/Service';
+import { WorkbenchStoreProvider } from './workbench/context/Store';
 
 function Tester() {
   const accessor = useService();
@@ -32,7 +32,7 @@ function Tester() {
   );
 }
 
-export function TestService() {
+export function TestVsplay() {
   return (
     <ServiceProvider>
       <WorkbenchStoreProvider>

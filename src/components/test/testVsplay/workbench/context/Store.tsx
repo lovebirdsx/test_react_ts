@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect, useRef, useState } from 'react'; 
 import { WorkbenchStore, workbenchStoreCreator } from '../store/store';
 import { IWorkbenchStoreOptions } from '../store/common';
 import { DisposableStore } from '../../base/event';
-import { useService } from './service';
+import { useService } from './Service';
 
 export const createWorkbenchStore = (options: IWorkbenchStoreOptions) => {
   return createStore<WorkbenchStore>(workbenchStoreCreator(options));

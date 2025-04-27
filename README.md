@@ -19,6 +19,13 @@
 
 在`src/components/test`目录下，有一些测试项，可以用来测试项目的一些功能：
 
+### TestVsplay
+
+* 目录：`src/components/test/TestVsplay`
+* 功能：测试`vsplay`的使用，包括：
+  * 代码分层
+  * Service和Store的通讯
+
 ### TestTree
 
 * [源码文件：TestTree.tsx](src/components/test/TestTree.tsx)
