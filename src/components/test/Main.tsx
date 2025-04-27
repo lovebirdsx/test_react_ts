@@ -24,7 +24,7 @@ import { TestPeekComponent } from './TestPeekComponent';
 import { TestSelect } from './TestSelect';
 import { TestReactWindow } from './TestReactWindow';
 import { TestTree } from './TestTree';
-import { TestVsplay } from './testVsplay/TestService';
+import { TestVsplay } from './testVsplay/TestVsplay';
 import { TestSelectorEfficiency } from './TestSelector';
 
 function registerAllTests() {
