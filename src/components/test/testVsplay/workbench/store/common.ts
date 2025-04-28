@@ -1,4 +1,4 @@
-import { DisposableStore } from '../../base/event';
+import { DisposableStore } from '../../base/common/event';
 import { ServicesAccessor } from '../../platform/instantion/common/instantion';
 
 export interface IWorkbenchStoreOptions {

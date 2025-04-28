@@ -1,4 +1,4 @@
-import { EventEmitter } from '../../base/event';
+import { EventEmitter } from '../../base/common/event';
 import { registerSingleton } from '../instantion/common/extension';
 import { IStorageService } from './storage';
 

@@ -1,4 +1,4 @@
-import { IEvent } from '../../base/event';
+import { IEvent } from '../../base/common/event';
 import { createDecorator } from '../instantion/common/instantion';
 
 export interface IStorageService {

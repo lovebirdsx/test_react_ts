@@ -25,6 +25,7 @@
 * 功能：测试`vsplay`的使用，包括：
   * 代码分层
   * Service和Store的通讯
+  * Layout方案
 
 ### TestTree
 

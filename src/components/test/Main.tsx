@@ -51,7 +51,7 @@ function registerAllTests() {
   manager.registerTest('TestSelect', () => <TestSelect />);
   manager.registerTest('TestReactWindow', () => <TestReactWindow />);
   manager.registerTest('TestTree', () => <TestTree />);
-  manager.registerTest('TestService', () => <TestVsplay />);
+  manager.registerTest('TestVsplay', () => <TestVsplay />);
   manager.registerTest('TestSelectorEfficiency', () => <TestSelectorEfficiency />);
 }
 
@@ -76,6 +76,8 @@ export function TestMain() {
     localStorage.setItem('testId', testId.toString());
   }, [testId]);
 
+  const test = manager.tests[testId];
+
   return (
     <Box p={2}>
       <Typography variant="h2">React Test</Typography>
@@ -91,7 +93,7 @@ export function TestMain() {
             }),
           )}
         </Grid>
-        <Box p={2}>{manager.tests[testId].render()}</Box>
+        <Box p={2}>{test?.render()}</Box>
       </Box>
     </Box>
   );

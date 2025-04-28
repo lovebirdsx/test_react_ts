@@ -1,0 +1,52 @@
+.workbench {
+  display: grid;
+  height: 50vh;              /* 整个编辑器撑满窗口高度 */
+  position: relative;
+  grid-template-rows:
+    var(--title-height)       /* TitleBar 高度 */
+    1fr                       /* 主内容区（ActivityBar/SideBar/Editor） */
+    var(--panel-height)       /* Panel 高度 */
+    var(--status-height);     /* StatusBar 高度 */
+  grid-template-columns:
+    var(--activity-width)     /* ActivityBar 宽度 */
+    var(--left-width)         /* LeftSideBar 宽度 */
+    1fr                       /* Editor 区域自适应 */
+    var(--right-width);       /* RightSideBar 宽度 */
+  grid-template-areas:
+    "title    title    title    title"
+    "activity left     editor   right"
+    "activity left     panel    right"
+    "status   status   status   status";
+}
+.part {
+  overflow: hidden;
+  border: 1px solid #ccc;
+}
+.part--title  {
+  grid-area: title;
+  background-color: #f3f3f3;
+}
+.part--activity {
+  grid-area: activity;
+  background-color: #e3e3e3;
+}
+.part--left   {
+  grid-area: left;
+  background-color: #d3d3d3;
+}
+.part--editor {
+  grid-area: editor;
+  background-color: #ffffff;
+}
+.part--right  {
+  grid-area: right;
+  background-color: #c3c3c3;
+}
+.part--panel  {
+  grid-area: panel;
+  background-color: #b3b3b3;
+}
+.part--status {
+  grid-area: status;
+  background-color: #a3a3a3;
+}

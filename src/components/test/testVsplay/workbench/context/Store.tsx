@@ -4,7 +4,7 @@ import { shallow } from 'zustand/shallow';
 import { createContext, useContext, useEffect, useRef, useState } from 'react'; // Import useState
 import { WorkbenchStore, workbenchStoreCreator } from '../store/store';
 import { IWorkbenchStoreOptions } from '../store/common';
-import { DisposableStore } from '../../base/event';
+import { DisposableStore } from '../../base/common/event';
 import { useService } from './Service';
 
 export const createWorkbenchStore = (options: IWorkbenchStoreOptions) => {
